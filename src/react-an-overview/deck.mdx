@@ -1,0 +1,714 @@
+---
+author: Gabriel Pichot
+---
+
+layout: mainSection
+
+---
+
+import { Appear } from "spectacle";
+import { Danger, Side } from "@gpichot/spectacle-deck";
+import { Timeline } from "@gpichot/spectacle-deck";
+import { TimelineItem } from "@gpichot/spectacle-deck";
+import { ItemsColumn, IconBox } from "@gpichot/spectacle-deck";
+import { FilePane } from "@gpichot/spectacle-deck";
+import { HorizontalList } from "@gpichot/spectacle-deck";
+import { HorizontalListItem, Image } from "@gpichot/spectacle-deck";
+
+# React: **An Overview**
+
+---
+
+layout: side
+
+---
+
+### **A bit about me**
+
+<Side>
+<ItemsColumn>
+  <IconBox icon="⚛️">
+
+I have been using React for 6 years (around 2015-2016).
+
+  </IconBox>
+  <IconBox icon="👨‍🏫">
+
+I have been teaching professionally React for about a year now.
+
+  </IconBox>
+  <IconBox icon="🤷‍♂️">
+
+I learnt 80% of what I know about React preparing my courses and reading a lot
+of documentation and articles.
+
+  </IconBox>
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **History**
+
+<Timeline>
+ <TimelineItem title="2011">
+
+Created by Jordan Walke, a software engineer at Facebook.
+
+  </TimelineItem>
+  <TimelineItem title="May 2013">
+
+⚛️ **React** is open sourced.
+
+  </TimelineItem>
+  <TimelineItem title="March 2015">
+
+📱 React Native
+
+  </TimelineItem>
+  <TimelineItem title="Feb 2019">
+
+**v16.8:** React Hooks 🤘
+
+  </TimelineItem>
+  <TimelineItem title="Oct 2020">
+
+**v17**: 🤷‍♂️
+
+  </TimelineItem>
+  <TimelineItem title="March 2022">
+
+**v18:** Concurrent React
+
+  </TimelineItem>
+</Timeline>
+
+---
+
+layout: side
+
+---
+
+### Frontend **Libraries & Frameworks**
+
+import angularIcon from "./assets/angular.svg";
+import svelteIcon from "./assets/svelte.png";
+import vueIcon from "./assets/vuejs.png";
+import preactIcon from "./assets/preact.png";
+
+<Side>
+<ItemsColumn>
+  <div>
+
+<img src={angularIcon} alt="Angular" height="64" />
+
+Angular
+
+  </div>
+  <div>
+
+<img src={svelteIcon} alt="Svelte" height="64" />
+
+Svelte
+
+  </div>
+  <div>
+
+<img src={vueIcon} alt="Vue" height="64" />
+
+VueJS
+
+  </div>
+  <div>
+
+<img src={preactIcon} alt="Preact" height="64" />
+
+Preact
+
+  </div>
+  <div>
+
+JQuery, Backbone, Ember, Knockout, etc.
+
+  </div>
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### Why **React?**
+
+import googleTrends from "./assets/google-trends-frameworks.png";
+
+<Appear>
+
+<a
+  href="https://trends.google.com/trends/explore?date=today%205-y&q=%2Fm%2F012l1vxv,%2Fg%2F11c6w0ddw9,%2Fg%2F11c5t00h04,%2Fg%2F11c0vmgx5d"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <img src={googleTrends} alt="Google Trends" height={400} />
+</a>
+
+</Appear>
+
+<Side>
+<ItemsColumn>
+  <IconBox icon="💰">
+
+Median Salary in France: 46k€ [Source](https://fr.talent.com/salary?job=developpeur+reactjs)
+
+  </IconBox>
+  <IconBox icon="🧠">
+
+A single language to master: JavaScript
+
+No template language (JSX is JavaScript)
+
+  </IconBox>
+  <IconBox icon="🙃">
+
+Support TypeScript
+
+  </IconBox>
+  <IconBox icon="🚀">
+
+NextJS, React Native, Remix, etc.
+
+  </IconBox>
+</ItemsColumn>
+</Side>
+
+---
+
+layout: sidedImage
+
+---
+
+## **Concepts**
+
+import iceberg from "./assets/iceberg.png";
+
+<Image src={iceberg} alt="Iceberg" />
+
+---
+
+layout: sidedImage
+
+---
+
+### A **Declarative** API
+
+import declarativeUI from "./assets/declarative-ui.svg";
+
+<Image src={declarativeUI} alt="Declarative UI" />
+
+<Appear>
+
+[What is React: A Visual Introduction For
+Beginners](https://learnreact.design/posts/what-is-react)
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Components**
+
+<Appear>
+
+**Props** are to configure a component.
+
+</Appear>
+
+<Appear>
+
+**State** is to manage the internal state of a component.
+
+</Appear>
+
+```typescript
+// @step highlight(1)
+// @step showLines(7-21) highlight(7-21)
+// @step highlight(8) name("Retrieve props")
+// @step highlight(9) name("Declare state")
+// @step highlight(16-17) name("Use state")
+// @step showLines(2-6) highlight(3-5)
+// @step showLines(22-30) highlight(23-30)
+import React from "react";
+
+type TextFieldProps = React.ComponentPropsWithoutRef<"input"> & {
+  label: string;
+};
+
+export function TextField(props: TextFieldProps) {
+  const { label, ...inputProps } = props;
+  const [value, setValue] = React.useState(inputProps.value);
+
+  return (
+    <div>
+      <label htmlFor={props.id}>{props.label}</label>
+      <input
+        {...inputProps}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <TextField label="First Name" />
+      <TextField label="Last Name" />
+    </div>
+  );
+}
+```
+
+---
+
+layout: side
+
+---
+
+## **JavaScript Fundamentals for Hooks**
+
+<Side>
+
+<ItemsColumn>
+  <IconBox icon="🪐">
+
+Primitive vs Reference Values
+
+  </IconBox>
+  <IconBox icon="📸">
+
+Closures
+
+  </IconBox>
+  <IconBox icon="🪝">
+
+Hooks & Dependency List
+
+  </IconBox>
+</ItemsColumn>
+
+</Side>
+
+---
+
+layout: sidedImage
+
+---
+
+## A **component re-render when**
+
+import boxesRing from "./assets/boxes-ring.png";
+
+<Image src={boxesRing} alt="Boxes Ring" />
+
+<HorizontalList>
+  <HorizontalListItem title="Its parent re-renders">
+
+When the parent that **instantiates** the component re-renders,
+the component will re-render too.
+
+  </HorizontalListItem>
+  <HorizontalListItem title="Its state changes">
+
+When the component's state changes, the component will re-render.
+
+This is the case with `useState` and `useReducer`.
+
+  </HorizontalListItem>
+  <HorizontalListItem title="A consumed context changes">
+
+When a context consumed by the component changes, the component will
+re-render.
+
+  </HorizontalListItem>
+</HorizontalList>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Portals**
+
+<Appear>
+
+We can render a component outside of the React Root tree.
+
+</Appear>
+
+<Appear>
+
+Useful for modals, tooltips, etc. (z-index, positionning issues, etc.)
+
+</Appear>
+
+<FilePane name="index.html">
+
+```html
+<!-- @step showLines(1) highlight(1) -->
+<!-- @step showLines(2) highlight(2) -->
+<div id="root"></div>
+<div id="modal-root"></div>
+```
+
+</FilePane>
+
+<FilePane name="App.tsx">
+
+```typescript
+// @step highlight(6)
+// @step highlight(7-9)
+// @step highlight(10)
+import React from "react";
+
+function Modal({ isOpen }: { isOpen: boolean }) {
+  if (!isOpen) return null;
+
+  return React.createPortal(
+    <div className="modal">
+      <h1>Modal</h1>
+    </div>,
+    document.getElementById("modal-root") as HTMLElement
+  );
+}
+```
+
+</FilePane>
+
+---
+
+layout: sidedCode
+
+---
+
+### **References**
+
+<Appear>
+
+Retrieve access to the DOM node of a component.
+
+</Appear>
+
+<Appear priority={1000}>
+
+See [Callback Refs](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs).
+
+</Appear>
+
+```typescript
+// @step highlight(4)
+// @step highlight(10)
+// @step highlight(7)
+import React from "react";
+
+function App() {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  return <input ref={inputRef} />;
+}
+```
+
+---
+
+layout: sidedImage
+
+---
+
+import contextPropsDrilling from "./assets/context-props-drilling.svg";
+
+### **Context API**
+
+<Image src={contextPropsDrilling} alt="Context API" />
+
+<Appear>
+
+Avoid [Props Drilling](https://kentcdodds.com/blog/prop-drilling).
+
+</Appear>
+
+<Appear>
+
+But prefer [Children Prop pattern](https://reactjs.org/docs/composition-vs-inheritance.html).
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **State Management**
+
+<Side>
+
+<Appear>
+
+Prefer `useState`, Context API
+
+</Appear>
+
+<Appear>
+
+If you need data from a API use [React
+Query](https://react-query.tanstack.com/) or GraphQL (😢).
+
+</Appear>
+
+<Appear>
+
+If you need to manage a complex Object on the front use MobX/Mobx-State-Tree,
+Redux, Valtio, Recoil, Jotai, xstate, Zustand, etc.
+
+</Appear>
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### Testing
+
+```typescript
+// @step showLines(1-3,6-13,23) highlight(3) name("Import screen and render")
+// @step highlight(10) name("Render component")
+// @step highlight(12) name("Check that element exists in document")
+// @step showLines(4-5) highlight(4) name("Import userEvent")
+// @step showLines(14-22) highlight(16) name("Setup userEvent")
+// @step highlight(19) name("Fill in input")
+import React from "react";
+
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+import { App } from "./App";
+
+describe("App", () => {
+  it("renders the app", () => {
+    render(<App />);
+
+    expect(screen.getByText("Hello World")).toBeInTheDocument();
+  });
+
+  it("changes the text", () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    userEvent.type(screen.getByRole("textbox"), "Hello");
+
+    expect(screen.getByText("Hello World")).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+layout: side
+
+---
+
+### **Storybook**
+
+<Side>
+<ItemsColumn>
+  <IconBox icon="🏝️">
+
+Test Components in Isolation
+
+  </IconBox>
+  <IconBox icon="📚">
+
+Document Components
+
+  </IconBox>
+  <IconBox icon="💥">
+
+Detect Visual Regressions
+
+  </IconBox>
+</ItemsColumn>
+</Side>
+
+<Appear>
+
+[Storybook](https://storybook.js.org/)
+
+</Appear>
+<Appear>
+
+[Chromatic](https://www.chromatic.com/)
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **React & TypeScript**
+
+<Appear>
+
+Yes
+
+</Appear>
+<Appear>
+
+Yes
+
+</Appear>
+<Appear>
+
+Yes 😍
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### v18?
+
+<Side>
+
+<Appear>
+
+[Concurrent Mode](https://reactjs.org/docs/concurrent-mode-intro.html)
+
+</Appear>
+
+<Appear>
+
+Transitions: `useTransition`, `useDeferredValue`
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+### CSS & **CSS-in-JS**
+
+<Side>
+<Appear>
+
+Be good at CSS first.
+
+</Appear>
+<Appear>
+
+Use CSS Modules.
+
+</Appear>
+<Appear>
+
+You don't need Tailwind CSS, Styled Components, or Emotion, or whatever.
+
+</Appear>
+<Appear>
+
+I emphasize: **be good at CSS first** (flow, flexbox, grid, positionning, z-index, etc.).
+
+</Appear>
+</Side>
+
+---
+
+layout: default3
+
+---
+
+## Questions
+
+---
+
+layout: side
+
+---
+
+## What I do these days
+
+<Appear priority={1000}>
+
+Website: https://www.craftvalue.io/
+
+</Appear>
+
+<Appear priority={1000}>
+
+Email: <a href="mailto:gabriel@craftvalue.io">gabriel.craftvalue.io</a>
+
+</Appear>
+
+<Appear priority={1000}>
+
+[Github (gpichot)](https://github.com/gpichot)
+
+[LinkedIn](https://linkedin.com/in/gabrielpichot/)
+
+</Appear>
+
+<Side>
+<ItemsColumn>
+<IconBox icon="👨‍🏫">
+
+Teaching React/TypeScript/NodeJS
+
+</IconBox>
+<IconBox icon="🎬">
+
+Preparing some courses (React Query, React Hook Form) for Udemy (~Nov/Dec
+2022).
+
+</IconBox>
+<IconBox icon="👨‍💻">
+
+Doing some OpenSource
+
+</IconBox>
+
+  </ItemsColumn>
+</Side>
+
+---
+
+layout: default3
+
+---
+
+## Thanks
+
+[Feedback Form 👏](https://tally.so/r/3jaAgQ)

@@ -1,0 +1,26 @@
+{
+  "name": "talks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.4.1",
+    "vite": "^4.5.0",
+    "vite-plugin-react-deck": "^1.0.1"
+  },
+  "dependencies": {
+    "@gpichot/spectacle-deck": "^1.0.6",
+    "@mdx-js/react": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "spectacle": "^10.1.6"
+  }
+}
