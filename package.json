@@ -14,10 +14,10 @@
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^3.4.1",
     "vite": "^4.5.0",
-    "vite-plugin-react-deck": "^1.0.2"
+    "vite-plugin-react-deck": "^1.0.3"
   },
   "dependencies": {
-    "@gpichot/spectacle-deck": "^1.0.6",
+    "@gpichot/spectacle-deck": "^1.0.8",
     "@mdx-js/react": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
