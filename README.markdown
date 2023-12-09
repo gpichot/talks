@@ -28,9 +28,9 @@
 
 ### 2022-2023
 
-- Web Development Fundamentals JavaScript (1WEBD), 6 days, Supinfo, Paris Campus (FR)
-  Topics: JavaScript, HTML, CSS, DOM.
+- Web Development Fundamentals JavaScript (1WEBD), 6 days, Supinfo, Paris Campus (FR)<br />
+  📚 Topics: JavaScript, HTML, CSS, DOM.
 - NodeJS & APIs (3APIS), 6 days, Supinfo, Paris Campus (FR).<br />
-  Topics: JavaScript, NodeJS, Express, MongoDB, HTTP, REST APIs, OpenAPI, WebSockets, Authentication, Testing
-- React Fundamentals (2WEBD & 3WEBD), 2 x 4 days, Supinfo, Paris Campus (FR)
-  Topics: React, JSX, Components, Props, State, Data Fetching (SWR).
+  📚 Topics: JavaScript, NodeJS, Express, MongoDB, HTTP, REST APIs, OpenAPI, WebSockets, Authentication, Testing
+- React Fundamentals (2WEBD & 3WEBD), 2 x 4 days, Supinfo, Paris Campus (FR)<br />
+  📚 Topics: React, JSX, Components, Props, State, Data Fetching (SWR).
