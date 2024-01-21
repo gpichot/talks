@@ -1,5 +1,15 @@
 ## Talks
 
+### 2024
+
+- 2024-01-18: Les fondamentaux JavaScript pour React (Webinaire)
+
+### 2023
+
+- 2023-12-20: Les clefs pour réussir l'entretien technique (Webinaire)
+
+### 2022
+
 - **2022-09-22** Modulo.tech: React: Overview & Key Concepts
   [Slides](https://talks-smoky.vercel.app/react-an-overview/?slideIndex=0&stepIndex=0)
 
