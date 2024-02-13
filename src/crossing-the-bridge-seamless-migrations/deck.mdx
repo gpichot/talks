@@ -1,0 +1,424 @@
+---
+author: Gabriel
+title: "Crossing the bridge"
+summary: >
+  Sur ma dernière mission, j'ai mené plusieurs chantiers de modernisation d'une
+  stack front et back existante : mises à jour des versions de librairies
+  (mongoose/mongodb, react query, webpack -> vite etc.) et continuer la
+  conversion d'une code base JS/TS non strict vers TypeScript strict.
+  Ce talk est donc un REX sur la gestion du changement technique d'un projet et
+  fournis des pistes de pour réaliser les mises à jour des librairies tierces
+  et migrer son code de JavaScript vers TypeScript sans accroc.
+  The main idea: you can always do gradual migrations
+tags: ["javascript", "typescript", "migration", "modernisation", "librairies"]
+outline: >
+  - What I do
+  - What is this about?
+  - Why is it important? (Why should you care?) DX, Developer Retention,
+    Security, Maintenance, Performance (ecosystem is going really fast)
+
+  - Some key figures: 
+    - the project: 180k when I arrived, 260k one year later 
+    - 1 front, 20+ microservices/gateways
+    - team: between 3 and 6 people
+    - 3 major migrations: 
+      - mongoose/mongodb
+      - react-query
+      - webpack -> vite
+    - custom webpack to vite. 
+  - Lessons learnt (isolate dependencies as much as possible, change management
+    should be part of the culture, integration tests > unit tests, typescript)
+
+---
+
+layout: mainSection
+
+---
+
+import { Side, ItemsColumn, Image } from '@gpichot/spectacle-deck'
+import { Text, Appear } from '@gpichot/spectacle-deck'
+import { HorizontalList } from '@gpichot/spectacle-deck'
+import { HorizontalListItem } from '@gpichot/spectacle-deck'
+
+# **Crossing the bridge**
+
+_Seamless strategies for updating and migrating libraries_
+
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from './assets/gabriel.jpg'
+
+<Image src={me} alt="Gabriel" style={{ objectFit: 'cover' }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+**Teaching** @ Supinfo<br />
+_JavaScript, TypeScript, React, Node.js_
+
+**Doing workshops** @ Human Coders/CraftValue<br />
+_Advanced React, NodeJS, TypeScript_
+
+**Freelancing** @ CraftValue<br />
+_Currently Tech Lead_
+
+_I post sometimes on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+
+---
+
+layout: side
+
+---
+
+## Some **Context**
+
+<Side>
+<ItemsColumn>
+
+1 front (React)
+
+~20 microservices/gateways (Node.js/Express)
+
+~180k locs about 1 year ago<br />
+~250k locs now
+
+Team: between 3 and 6 people
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+import mongodbEmail from './assets/mongodb-email.png'
+import mongoMongooseCompatibility from './assets/mongodb-mongoose-compatibility.png'
+
+<Image src={mongodbEmail} alt="Mongodb email" style={{
+  maxHeight: 500,
+}}/>
+
+<Side>
+<ItemsColumn>
+
+```json
+  "mongoose": "^5.13.0",
+```
+
+<Image src={mongoMongooseCompatibility} alt="Mongodb mongoose compatibility" style={{
+  maxHeight: 150,
+}}/>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import nervousKeyAndPeele from './assets/nervousKeyAnPeele.gif'
+
+
+<Text style={{display: 'flex', flexFlow: 'row', gap: '2rem' }}>
+  <Appear>
+    No TypeScript
+  </Appear>
+  <Appear>
+    No Integration Tests
+  </Appear>
+  <Appear>
+    150+ lines impacted
+  </Appear>
+</Text>
+
+<Appear>
+<Image src={nervousKeyAndPeele} alt="Nervous Key and Peele" height={400} style={{
+  maxHeight: 500,
+}} />
+</Appear>
+
+
+---
+
+layout: centered
+
+---
+
+import successKid from './assets/success-kid.png'
+import drake from './assets/drake.png'
+
+
+<div style={{display:'flex', flexFlow: 'row', alignItems: 'center',
+justifyContent: 'space-between', width: '100%' }}>
+<Appear>
+    <Image src={successKid} alt="Success Kid" style={{maxHeight: 300}} /></Appear>
+  <div>
+  <Appear>
+
+  ```
+  157 files changed
+  9102 insertions(+)
+  8774 deletions(-)
+  ```
+
+</Appear>
+ </div>
+<Appear>
+    <Image src={drake} alt="Drake" style={{maxHeight: 300}} />
+</Appear>
+</div>
+
+
+---
+
+layout: centered
+
+---
+
+import fullmigration from './assets/fullmigration.png'
+
+<Image src={fullmigration} alt="Full migration" style={{maxHeight: 350,
+maxWidth: '80vw'}} />
+
+### Our **Problem**
+
+---
+
+layout: centered
+
+---
+
+import filesSmall from './assets/files-small.png'
+
+<Image src={filesSmall} style={{maxHeight: 300}}/>
+
+### Migrating: **What we see**
+
+---
+
+layout: centered
+
+---
+
+import filesBig from './assets/files-big.png'
+
+<Image src={filesBig} style={{maxHeight: 500}} />
+
+### Reality: **What we have to change**
+
+---
+
+layout: side
+
+---
+
+## **From v5 to v8**
+
+<Side>
+<ItemsColumn>
+
+First v5 to v6, then v6 to v7, then v7 to v8?
+
+Nope...
+
+v5 to v8, faster (and simpler)
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import incrementalMigration from './assets/incremental-migration.png'
+
+<Image src={incrementalMigration} alt="Incremental migration"
+style={{maxWidth: '80vw', maxHeight: 250}} />
+
+### **Incremental Migration**
+
+---
+
+layout: centered
+
+---
+
+import step1 from './assets/step-1.png'
+
+<Image src={step1} style={{maxHeight: 300, marginBottom: '3rem'}}/>
+
+### Create a **new package in monorepo**
+
+---
+
+layout: centered
+
+---
+
+import step2 from './assets/step-2.png'
+
+<Image src={step2} style={{maxHeight: 400, marginBottom: '3rem'}} />
+
+### Migrate models **one by one** to this new library.
+
+
+---
+
+layout: sidedCode
+
+---
+
+## **No Monorepo?**
+
+<Appear>
+
+npm aliases
+
+</Appear>
+
+
+```json
+// @step showLines(1-5)
+{
+  "dependencies": {
+    "mongoose-future: "npm:mongoose@^8.0.0",
+  }
+}
+```
+
+---
+
+layout: side
+
+---
+
+## **Does it work?**
+
+<Side>
+<ItemsColumn>
+
+mongoose v5 ➡️ v8 ✅
+
+react query v2 ➡️ v5 ✅
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Downsides**
+
+<Side>
+<ItemsColumn>
+
+mongoose: number of connections to the database x2
+
+react query: two caches/clients in memory<br />
+bundle size
+
+</ItemsColumn>
+</Side>
+
+
+---
+
+layout: side
+
+---
+
+## Migrating to **TypeScript**
+
+<Appear>
+
+Reality: we already had TypeScript
+
+</Appear>
+
+<Appear>
+
+With `strict: false` 🤦
+
+</Appear>
+
+<Side>
+<ItemsColumn>
+
+TypeDefs 
+
+JSDoc & `@deprecated`
+
+
+[typescript-strict-plugin](https://github.com/allegro/typescript-strict-plugin)
+_allow to run with strict enabled on a subset of files_
+
+Move code from big to TS files bits by bits.
+
+Patience
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Methodology** & **Lessons learnt**
+
+<Side>
+<ItemsColumn>
+
+Measure
+
+Communicate on Progress
+
+Isolate dependencies
+
+Add **Strict** TypeScript
+
+Add **Integration** tests
+
+**Change Management** must be in Team Culture
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## Questions ?
+
+---
+
+layout: centered
+
+---
+
+
+import feedbackQR from './assets/feedback-qr.png'
+
+### **Thanks 🙏**
+
+<Image src={feedbackQR} alt="Feedback QR" style={{maxHeight: 300, marginBottom
+:'2rem'}} />
+
+### **Feedback** ⬆️
