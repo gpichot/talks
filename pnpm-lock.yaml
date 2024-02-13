@@ -29,8 +29,8 @@ devDependencies:
     specifier: ^4.5.0
     version: 4.5.0
   vite-plugin-react-deck:
-    specifier: ^1.0.5
-    version: 1.0.5(@types/react@18.2.55)
+    specifier: ^1.0.6
+    version: 1.0.6(@types/react@18.2.55)
 
 packages:
 
@@ -7160,8 +7160,8 @@ packages:
       vfile-message: 4.0.2
     dev: true
 
-  /vite-plugin-react-deck@1.0.5(@types/react@18.2.55):
-    resolution: {integrity: sha512-Ot7qgsKYpQmRHQzadv9y81KnH7yuSAoq6flOjnmbObMDf8StGLPl2q4UevqER+forwSZD1lbkTxkb7+rVhNlYA==}
+  /vite-plugin-react-deck@1.0.6(@types/react@18.2.55):
+    resolution: {integrity: sha512-OjwSwhf4M1zZzlgT3wLzHjZiwouWea93O2RARDiKMMQqjUiusNzngLz/+QsksrhOTBI4ZKRvJrAdKsZGx5gIiw==}
     dependencies:
       '@mdx-js/mdx': 3.0.1
       '@mdx-js/react': 3.0.1(@types/react@18.2.55)
