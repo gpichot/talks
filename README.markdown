@@ -2,6 +2,14 @@
 
 ### 2024
 
+- 2024-02-22: La gestion d'état avec React : tout ce que vous avez besoin de
+  savoir (Webinaire)
+- 2024-02-15: Introduction aux tests de composants React avec Storybook
+  (Webinaire)
+- 2024-02-13: Stratégies pour la mise à jour et la migration de bibliothèques
+  sans accroc [Paris TypeScript]
+  ((Replay)[https://www.youtube.com/watch?v=vexfQg9bgIs&pp=ygVOU3RyYXTDqWdpZXMgcG91ciBsYSBtaXNlIMOgIGpvdXIgZXQgbGEgbWlncmF0aW9uIGRlIGJpYmxpb3Row6hxdWVzIHNhbnMgYWNjcm9j])
+- 2024-01-24: Intégrer TypeScript dans un projet React (Webinaire)
 - 2024-01-18: Les fondamentaux JavaScript pour React (Webinaire)
 
 ### 2023
@@ -39,6 +47,10 @@
 
 ### 2023-2024
 
+- Microservices (4WEBD), 6 days, Supinfo, Paris & Remove (FR)<br />
+  📚 Topics: Microservices, RabbitMQ, NestJS, Docker, Monitoring
+- React Advanced (3WEBD), 4 days, Supinfo, Paris Campus (FR)<br />
+  📚 Topics: React, React Query, Testing, Performance, Optimization, Accessibility
 - NodeJS & APIs (3APIS), 6 days, Supinfo, Paris Campus (FR)<br />
   📚 Topics: JavaScript, NodeJS, Express, MongoDB, HTTP, REST APIs, OpenAPI, WebSockets, Authentication, Testing
 
