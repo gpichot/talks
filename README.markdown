@@ -8,7 +8,7 @@
   (Webinaire)
 - 2024-02-13: Stratégies pour la mise à jour et la migration de bibliothèques
   sans accroc [Paris TypeScript]
-  ((Replay)[https://www.youtube.com/watch?v=vexfQg9bgIs&pp=ygVOU3RyYXTDqWdpZXMgcG91ciBsYSBtaXNlIMOgIGpvdXIgZXQgbGEgbWlncmF0aW9uIGRlIGJpYmxpb3Row6hxdWVzIHNhbnMgYWNjcm9j])
+  [Replay](https://www.youtube.com/watch?v=vexfQg9bgIs&pp=ygVOU3RyYXTDqWdpZXMgcG91ciBsYSBtaXNlIMOgIGpvdXIgZXQgbGEgbWlncmF0aW9uIGRlIGJpYmxpb3Row6hxdWVzIHNhbnMgYWNjcm9j)
 - 2024-01-24: Intégrer TypeScript dans un projet React (Webinaire)
 - 2024-01-18: Les fondamentaux JavaScript pour React (Webinaire)
 
