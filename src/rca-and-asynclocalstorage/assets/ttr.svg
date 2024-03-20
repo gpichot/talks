@@ -1,0 +1,21 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 796.3175014836434 67.30238861141015" width="1592.6350029672867" height="134.6047772228203">
+  <!-- svg-source:excalidraw -->
+  
+  <defs>
+    <style class="style-fonts">
+      @font-face {
+        font-family: "Virgil";
+        src: url("https://excalidraw.com/Virgil.woff2");
+      }
+      @font-face {
+        font-family: "Cascadia";
+        src: url("https://excalidraw.com/Cascadia.woff2");
+      }
+      @font-face {
+        font-family: "Assistant";
+        src: url("https://app.excalidraw.com//dist/excalidraw-assets/Assistant-Regular.woff2");
+      }
+    </style>
+    
+  </defs>
+  <rect x="0" y="0" width="796.3175014836434" height="67.30238861141015" fill="#042f3b"></rect><g stroke-linecap="round" transform="translate(10 11.022273453815615) rotate(0 388.1587507418217 20.82950682068258)"><path d="M10.41 0 C192.63 -1.7, 371.17 -2.19, 765.9 0 M10.41 0 C229.18 2.64, 448.21 2.79, 765.9 0 M765.9 0 C769.07 3.87, 779.36 0.59, 776.32 10.41 M765.9 0 C770.45 0.25, 778.36 7.34, 776.32 10.41 M776.32 10.41 C777.37 16.73, 778.45 25.27, 776.32 31.24 M776.32 10.41 C774.98 14.12, 775.57 21.21, 776.32 31.24 M776.32 31.24 C772.44 37.4, 771.7 44.33, 765.9 41.66 M776.32 31.24 C772.55 37.91, 770.97 38.33, 765.9 41.66 M765.9 41.66 C609.13 46.28, 455.75 47.2, 10.41 41.66 M765.9 41.66 C499.33 47.34, 231.63 45.81, 10.41 41.66 M10.41 41.66 C3.58 37.99, 0.7 40.69, 0 31.24 M10.41 41.66 C-0.63 44.6, 3.29 33.95, 0 31.24 M0 31.24 C0.57 27.7, -4.12 18.22, 0 10.41 M0 31.24 C-0.75 25.82, -0.91 18.17, 0 10.41 M0 10.41 C-0.64 2.18, -0.11 -1.43, 10.41 0 M0 10.41 C1.43 4.99, 3 0.78, 10.41 0" stroke="#ffffff" stroke-width="1" fill="none"></path></g><g stroke-linecap="round"><g transform="translate(220.96078481225777 14.223740400560018) rotate(0 -0.3523923929847115 19.6764405552035)"><path d="M-0.45 -0.29 C-0.63 6.05, -0.14 32.35, -0.07 38.89 M1.51 -1.49 C1.15 4.94, -0.36 33.26, -0.69 40.19" stroke="#ffffff" stroke-width="1" fill="none"></path></g></g><mask></mask><g transform="translate(36.097484699825145 24.774559261243212) rotate(0 72.54397583007812 10)"><text x="0" y="14.016" font-family="Virgil, Segoe UI Emoji" font-size="16px" fill="#ffffff" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Time to Detection</text></g><g transform="translate(316.3763602455592 24.69458280336312) rotate(0 15.823982238769531 10)"><text x="0" y="14.016" font-family="Virgil, Segoe UI Emoji" font-size="16px" fill="#ffffff" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">RCA</text></g><g stroke-linecap="round"><g transform="translate(445.6017693266667 10.963452327996492) rotate(0 0.5350149251298717 22.38651368423507)"><path d="M-0.28 -0.96 C-0.22 6.43, 1.18 36.68, 1.46 44.4 M1.78 1.15 C1.61 8.71, 0.88 38.72, 0.72 45.74" stroke="#ffffff" stroke-width="1" fill="none"></path></g></g><mask></mask><g stroke-linecap="round"><g transform="translate(619.5229871272604 14.121143509816193) rotate(0 0.2082145713779937 21.309589311744276)"><path d="M-1.02 -0.82 C-1.04 6.1, 0.58 34.68, 0.9 41.98 M0.64 1.36 C0.42 8.4, 0.26 36.61, 0.21 43.18" stroke="#ffffff" stroke-width="1" fill="none"></path></g></g><mask></mask><g transform="translate(485.9926383650818 24.69458280336312) rotate(0 45.415977478027344 10)"><text x="0" y="14.016" font-family="Virgil, Segoe UI Emoji" font-size="16px" fill="#ffffff" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Time to Fix</text></g><g transform="translate(635.8188798725805 24.69458280336312) rotate(0 60.60795593261719 10)"><text x="0" y="14.016" font-family="Virgil, Segoe UI Emoji" font-size="16px" fill="#ffffff" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Ensure fix work</text></g></svg>

@@ -1,0 +1,549 @@
+---
+author: Gabriel
+title: "Improving root cause analysis with AsyncLocalStorage"
+summary: >
+  Les logs prennent une place importante lorsqu'un accès à un environnement de production est limité ou lorsqu'un bug est difficilement reproduisible. Mettre en place des logs est une tâche assez simple en soi, mais elle devient plus complexe lorsqu'on cherche à tracer une suite de logs ou d'appels à travers plusieurs couches.
+  Ce talk présente un moyen simple pour pouvoir tracer un utilisateur, un traceparent ou une ressource à travers des logs assez simplement avec l'API AsyncLocalStorage.
+tags: [nodejs, javascript, logs, tracing]
+outline: >
+  - What I do
+  - Why I'm here
+  - What is root cause analysis
+  - What is logging
+  - What is AsyncLocalStorage
+  - How to use it
+  - Demo
+  - Conclusion
+---
+
+layout: mainSection
+
+---
+
+import { Side, ItemsColumn, Image } from "@gpichot/spectacle-deck";
+import { Text, Appear, Doc } from "@gpichot/spectacle-deck";
+import { HorizontalList } from "@gpichot/spectacle-deck";
+import { HorizontalListItem } from "@gpichot/spectacle-deck";
+import { Timeline, TimelineItem } from "@gpichot/spectacle-deck";
+import { FilePane } from "@gpichot/spectacle-deck";
+
+# **Root Cause Analysis & ALS**
+
+_Or how one can improve root cause analysis using AsyncLocalStorage_
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "./assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+<Appear>
+
+**Teaching** @ Supinfo<br />
+_TypeScript, React, Node.js, Microservices_
+
+</Appear>
+
+<Appear>
+
+**Doing workshops** @ Human Coders/CraftValue<br />
+_React, NodeJS, TypeScript_
+
+</Appear>
+<Appear>
+
+**Consulting in Dev** @ CraftValue<br />
+_Mostly as Tech Lead on projects_
+
+</Appear>
+
+<Appear>
+
+_I post (sometimes) on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+import text1 from "./assets/text1.png";
+import text2 from "./assets/text2.png";
+
+<div style={{margin: '80px 0', display: 'flex', flexFlow: 'column', alignItems: 'center', gap: 40 }}>
+<Appear>
+
+<Image src={text1} alt="Text 1" style={{ objectFit: "cover", maxHeight: 80 }} />
+
+</Appear>
+<Appear>
+
+<Image src={text2} alt="Text 2" style={{ objectFit: "cover", maxHeight: 80 }} />
+
+</Appear>
+</div>
+
+### **Where it all starts**
+
+---
+
+layout: centered
+
+---
+
+import successKid from "./assets/success-kid.png";
+
+<Timeline>
+  <TimelineItem title="Issue reported">
+
+User reports a bug
+
+Who? When? What? Where? How?
+
+  </TimelineItem>
+  <TimelineItem title="Investigation">
+
+Search for clues (data, logs, metrics)
+
+  </TimelineItem>
+  <TimelineItem title="Found root cause">
+
+<Image
+  src={successKid}
+  alt="Success Kid"
+  style={{ objectFit: "cover", maxHeight: 150, marginTop: 20 }}
+/>
+
+</TimelineItem>
+  <TimelineItem title="Fix it">
+
+Write the code, get validation.
+
+  </TimelineItem>
+
+  <TimelineItem title="Non regression tests">
+
+Prevent it from happening again
+
+Yes, write tests!
+
+</TimelineItem>
+</Timeline>
+
+<br />
+
+### **Solving a bug (in production)**
+
+---
+
+layout: centered
+
+---
+
+import ttr from "./assets/ttr.svg";
+
+<Image
+  src={ttr}
+  alt="Time to Resolve"
+  style={{ backgroundColor: "transparent", maxHeight: 200, margin: "120px 0" }}
+/>
+
+### **Time to resolve (TTR)**
+
+---
+
+layout: side
+
+---
+
+## **How long it takes?**
+
+<Side>
+  <ItemsColumn>
+
+Few minutes
+
+Few hours
+
+Few days, multiple persons
+
+Few weeks, multiples teams
+
+Never, everybody gave up
+
+  </ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **Why is it complex?**
+
+import internalReasons from "./assets/internal-reasons.svg";
+import externalReasons1 from "./assets/external-reasons-1.svg";
+import externalReasons2 from "./assets/external-reasons-2.svg";
+
+<div style={{ display: "flex", flexFlow: "row" }}>
+  <Appear>
+    <Image
+      src={internalReasons}
+      alt="Internal reasons"
+      style={{
+        background: "transparent",
+        minWidth: "20vw",
+        maxHeight: 550,
+        maxWidth: 150,
+      }}
+    />
+  </Appear>
+  <Appear>
+    <Image
+      src={externalReasons1}
+      alt="External reasons"
+      style={{
+        background: "transparent",
+        minWidth: "25vw",
+        maxHeight: 550,
+        maxWidth: 250,
+      }}
+    />
+  </Appear>
+  <Appear>
+    <Image
+      src={externalReasons2}
+      alt="External reasons"
+      style={{
+        background: "transparent",
+        minWidth: "25vw",
+        maxHeight: 550,
+        maxWidth: 250,
+      }}
+    />
+  </Appear>
+</div>
+
+---
+
+layout: centered
+
+---
+
+import factSources from "./assets/fact-sources.svg";
+
+<Image
+  src={factSources}
+  alt="Fact sources"
+  style={{ background: "transparent", maxHeight: 600 }}
+/>
+
+### **Gathering facts**
+
+---
+
+layout: sidedImage
+
+---
+
+import saltBae from "./assets/salt-bae.gif";
+
+### **What if we added more details to our logs?**
+
+_Adding more needles in the haystack_
+
+<Image src={saltBae} alt="Salt Bae" style={{ marginRight: "-20%" }} />
+
+---
+
+layout: side
+
+---
+
+### **What we would like?**
+
+<Side>
+<ItemsColumn>
+
+User ID
+
+Request ID
+
+Session ID (mobile vs web)
+
+Traceparent ID (across services)
+
+Bonus: Entity ID
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Where and how?**
+
+import expressRequest from "./assets/express-request.svg";
+
+<Side>
+
+<Image
+  src={expressRequest}
+  alt="Express request"
+  style={{ background: "transparent", maxHeight: 600 }}
+/>
+
+</Side>
+
+<Appear>
+
+Global state?
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **No... parallel requests**
+
+<Side>
+
+import expressRequestParallel from "./assets/express-request-parallel.svg";
+
+<Image
+  src={expressRequestParallel}
+  alt="Express request parallel"
+  style={{ background: "transparent" }}
+/>
+
+</Side>
+
+<Appear>
+
+Child loggers?
+
+```typescript
+repository.create(..., logger.child({ requestId: ... }))
+```
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **No... too many layers**
+
+Plus it does not work with dependency injection.
+
+import lazyCollegeSenior from "./assets/lazy-college-senior.jpg";
+
+<Side>
+
+<Appear>
+<Image src={lazyCollegeSenior} alt="Lazy College Senior" style={{ background: 'transparent', maxHeight: 400 }} />
+</Appear>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Async Contexts 🥰**
+
+All calls from the same request share the same context.
+
+<Appear>
+
+And through the whole call stack (even in async calls).
+
+</Appear>
+
+import expressAsyncContexts from "./assets/express-async-contexts.svg";
+
+<Side>
+  <Image
+    src={expressAsyncContexts}
+    alt="Express async contexts"
+    style={{ background: "transparent", maxHeight: 600 }}
+  />
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **An example**
+
+```typescript
+// @step showLines(1) highlight(1) name("Import from node:async_hooks")
+// @step showLines(2-5) highlight(5) name("Create storage")
+// @step showLines(6-10) highlight(8) name("Define store for the current request")
+// @step highlight(9) name("Run next with the store attached to its async context")
+// @step showLines(11-16) highlight(13) name("Get the store from the async context")
+// @step highlight(14) name("Retrieve the requestId from the store")
+import { AsyncLocalStorage } from "node:async_hooks";
+
+type Store = Map<string, string>;
+
+export const als = new AsyncLocalStorage<Store>();
+
+app.use((req, res, next) => {
+  const store = new Map(["requestId", req.id]);
+  als.run(store, () => next());
+});
+
+app.get("/", (req, res) => {
+  const store = als.getStore();
+  console.log(store.get("requestId"));
+  res.send("Hello");
+});
+```
+
+<Doc
+  link="https://nodejs.org/api/async_context.html"
+  label="Asynchronous
+Context Tracking"
+/>
+
+---
+
+layout: sidedCode
+
+---
+
+### **And logging?**
+
+<FilePane name="pino.ts">
+
+```typescript
+// @step highlight(5-11) name("Add returned value to logs")
+import pino from "pino";
+import als from "./als";
+
+export const logger = pino({
+  mixin() {
+    const store = als.getStore();
+    const requestId = store?.get("requestId");
+    if (!requestId) return {};
+
+    return { requestId };
+  },
+});
+```
+
+</FilePane>
+<FilePane name="winston.ts">
+
+```typescript
+// @step highlight(5-10) name("Add custom format")
+import winston from "winston";
+import als from "./als";
+
+export const logger = winston.createLogger({
+  format: winston.format((info) => {
+    const store = als.getStore();
+    const requestId = store?.get("requestId");
+    if (!requestId) return info;
+    return { ...info, requestId };
+  })(),
+  transports: [new winston.transports.Console()],
+});
+```
+
+</FilePane>
+
+---
+
+layout: centered
+
+---
+
+### **Demo ✨**
+
+---
+
+layout: side
+
+---
+
+### **Some notes**
+
+<Side>
+<ItemsColumn>
+
+Does it work on edge? Yes. ([Vercel Edge
+Runtime](https://vercel.com/docs/functions/runtimes/edge-runtime#compatible-node.js-modules))
+
+AsyncLocalStorage is available since NodeJS v16.
+
+Bun? Yes.
+
+Deno? Yes.
+
+What about cls-hooked? Yes, rely on an old NodeJS API. ([cls-hooked](https://www.npmjs.com/package/cls-hooked))
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **Conclusion?**
+
+<Appear>
+
+## **One should put his phone on silent mode**
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **Questions ?**
+
+---
+
+layout: centered
+
+---
+
+import feedbackQR from "./assets/feedback-qr.png";
+
+### **Thanks 🙏**
+
+<Image
+  src={feedbackQR}
+  alt="Feedback QR"
+  style={{ maxHeight: 300, marginBottom: "2rem", borderRadius: 20 }}
+/>
+
+### **Feedback** ⬆️
