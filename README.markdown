@@ -2,6 +2,9 @@
 
 ### 2024
 
+- 2024-03-20: Improving Root Cause Analysis using AsyncLocalStorage
+  [Accelerator Engineering]
+  [Slides](https://talks-smoky.vercel.app/rca-and-asynclocalstorage?slideIndex=0&stepIndex=0)
 - 2024-02-22: La gestion d'état avec React : tout ce que vous avez besoin de
   savoir (Webinaire)
 - 2024-02-15: Introduction aux tests de composants React avec Storybook
