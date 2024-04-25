@@ -76,13 +76,108 @@ layout: centered
 
 ---
 
+### **Where it all starts**
+
+---
+
+layout: centered
+
+---
+
+import rain from "./assets/rain.jpg";
+
+##
+
+<Image
+  src={rain}
+  alt="Rain"
+  style={{
+    objectFit: "cover",
+    height: "140vh",
+    width: "100vw",
+    position: "absolute",
+    top: 0,
+    left: 0,
+  }}
+/>
+
+<div
+  style={{
+    position: "absolute",
+    right: "0",
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    opacity: 0.7,
+    color: "black",
+  }}
+>
+  <a
+    href="https://unsplash.com/photos/water-droplets-on-clear-glass-1YHXFeOYpN0?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
+    style={{ fontSize: "12px" }}
+  >
+    <Text fontSize={12} style={{ lineHeight: "10px" }}>
+      <span>Photo by Max Bender on Unsplash</span>
+    </Text>
+  </a>
+</div>
+
+---
+
+layout: centered
+
+---
+
+import terrasse from "./assets/terrasse.jpg";
+
+##
+
+<Image
+  src={terrasse}
+  alt="Terrasse"
+  style={{
+    objectFit: "cover",
+    height: "110vh",
+    minWidth: "100vw",
+    position: "absolute",
+    top: 0,
+    left: 0,
+  }}
+/>
+
+<div
+  style={{
+    position: "absolute",
+    opacity: 0.5,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "black",
+  }}
+>
+  <a href="https://unsplash.com/photos/a-group-of-people-sitting-at-a-table-under-orange-umbrellas-rDLXFD7zzPU?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
+    <Text fontSize={12} style={{ lineHeight: "10px" }}>
+      <span>Photo by Guillaume Didelet on Unsplash</span>
+    </Text>
+  </a>
+</div>
+
+---
+
+layout: centered
+
+---
+
 import text1 from "./assets/text1.png";
 import text2 from "./assets/text2.png";
 
 <div style={{margin: '80px 0', display: 'flex', flexFlow: 'column', alignItems: 'center', gap: 40 }}>
 <Appear>
 
-<Image src={text1} alt="Text 1" style={{ objectFit: "cover", maxHeight: 80 }} />
+<Image
+  src={text1}
+  alt="Text 1"
+  style={{ objectFit: "cover", maxHeight: 120 }}
+/>
 
 </Appear>
 <Appear>
@@ -92,7 +187,15 @@ import text2 from "./assets/text2.png";
 </Appear>
 </div>
 
-### **Where it all starts**
+## &nbsp;
+
+---
+
+layout: centered
+
+---
+
+### **What could we've planned to solve this kind of bug faster?**
 
 ---
 
@@ -157,7 +260,7 @@ import ttr from "./assets/ttr.svg";
   style={{ backgroundColor: "transparent", maxHeight: 200, margin: "120px 0" }}
 />
 
-### **Time to resolve (TTR)**
+### **Time to resolution (TTR)**
 
 ---
 
@@ -174,11 +277,11 @@ Few minutes
 
 Few hours
 
-Few days, multiple persons
+Few days (multiple persons)
 
-Few weeks, multiples teams
+Few weeks (multiples teams)
 
-Never, everybody gave up
+Never (everybody gave up)
 
   </ItemsColumn>
 </Side>
@@ -248,7 +351,15 @@ import factSources from "./assets/fact-sources.svg";
   style={{ background: "transparent", maxHeight: 600 }}
 />
 
-### **Gathering facts**
+### **Gathering facts: the more the merrier**
+
+---
+
+layout: centered
+
+---
+
+### **What is the best way to find a needle in a haystack?**
 
 ---
 
@@ -256,13 +367,17 @@ layout: sidedImage
 
 ---
 
-import saltBae from "./assets/salt-bae.gif";
+import haystack from "./assets/haystack.jpg";
 
-### **What if we added more details to our logs?**
+<Image src={haystack} alt="Haystack" style={{ objectFit: "cover" }} />
 
-_Adding more needles in the haystack_
+### **...adding more needles in the haystack**
 
-<Image src={saltBae} alt="Salt Bae" style={{ marginRight: "-20%" }} />
+<Appear>
+
+So what if we added more details in our logs?
+
+</Appear>
 
 ---
 
@@ -352,7 +467,7 @@ layout: side
 
 ### **No... too many layers**
 
-Plus it does not work with dependency injection.
+Plus it won't work with dependency injection.
 
 import lazyCollegeSenior from "./assets/lazy-college-senior.jpg";
 
@@ -477,11 +592,15 @@ export const logger = winston.createLogger({
 
 ---
 
-layout: centered
+layout: sidedImage
 
 ---
 
 ### **Demo ✨**
+
+import saltBae from "./assets/salt-bae.gif";
+
+<Image src={saltBae} alt="Salt Bae" style={{ marginRight: "-20%" }} />
 
 ---
 
@@ -510,17 +629,51 @@ What about cls-hooked? Yes, rely on an old NodeJS API. ([cls-hooked](https://www
 
 ---
 
-layout: centered
+layout: side
 
 ---
 
-### **Conclusion**
+### **Performance**
+
+<Side>
+<Appear>
+
+[AsyncLocalStorage kills 97% of performance in an async
+environment](https://github.com/nodejs/node/issues/34493)
+
+</Appear>
 
 <Appear>
 
-## **One should put his phone on silent mode**
+Benchmark on 21.1.0
 
 </Appear>
+
+<Appear>
+With "fake async" (await):
+
+```bash
+Performed 1143491 iterations to warmup
+Performed 5705603 iterations (with ALS enabled)
+Performed 10290352 iterations (with ALS disabled)
+ALS penalty: 44.55%
+```
+
+</Appear>
+
+  <Appear>
+With "true async" (setTimeout 2ms):
+
+```bash
+Performed 45 iterations to warmup
+Performed 3979 iterations (with ALS enabled)
+Performed 4028 iterations (with ALS disabled)
+ALS penalty: 1.22%
+```
+
+</Appear>
+
+</Side>
 
 ---
 
