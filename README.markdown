@@ -2,6 +2,9 @@
 
 ### 2024
 
+- 2024-04-24: Improving Root Cause Analysis using AsyncLocalStorage
+  [ParisJS]
+  [Slides](https://talks-smoky.vercel.app/rca-and-asynclocalstorage?slideIndex=0&stepIndex=0)
 - 2024-03-20: Improving Root Cause Analysis using AsyncLocalStorage
   [Accelerator Engineering]
   [Slides](https://talks-smoky.vercel.app/rca-and-asynclocalstorage?slideIndex=0&stepIndex=0)
