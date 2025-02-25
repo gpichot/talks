@@ -2,6 +2,8 @@
 
 ### 2024
 
+- 2024-12-11: Zero to 100 Million: going beyond Node.js Runtime Limits
+  [Node.js Meetup]
 - 2024-04-24: Improving Root Cause Analysis using AsyncLocalStorage
   [ParisJS]
   [Slides](https://talks-smoky.vercel.app/rca-and-asynclocalstorage)

@@ -1,0 +1,659 @@
+---
+title: "Zero to 100 Million: going beyond Node.js runtime limits"
+---
+
+layout: mainSection
+
+---
+
+import { Notes, Appear, Doc, Text } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn } from "@gpichot/spectacle-deck";
+
+# **Zero to 100 Million: going beyond Node.js runtime limits**
+
+---
+
+layout: centered
+
+---
+
+# Zero to 100 million...
+
+---
+
+layout: centered
+
+---
+
+import trap from "./trap.jpg";
+
+<Image
+  src={trap}
+  alt="Trap"
+  style={{ maxHeight: "50vh", minWidth: "60vw", flex: 2 }}
+/>
+
+##### &nbsp;
+
+---
+
+layout: centered
+
+---
+
+# ...going beyond Node.js runtime limits
+
+<div style={{ display: "flex", gap: '2rem', marginTop: '5rem' }}>
+  <Appear>
+
+    Algorithmic Complexity
+
+  </Appear>
+  <Appear>
+
+    Memoization & Dynamic Programming
+
+  </Appear>
+  <Appear>
+
+    Asynchronicity, task decomposition and Workers
+
+  </Appear>
+  <Appear>
+ 
+    ...
+
+  </Appear>
+</div>
+
+---
+
+layout: centered
+
+---
+
+import lied from "./lied.jpg";
+
+<Image src={lied} style={{ maxHeight: "50vh" }} />
+
+# &nbsp;
+
+---
+
+layout: centered
+
+---
+
+## Let's compute the 100 millionth number...
+
+<Appear>
+
+## of the Fibonacci sequence
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+import facepalm from "./facepalm.gif";
+
+<Image src={facepalm} style={{ maxHeight: "50vh" }} />
+
+# &nbsp;
+
+---
+
+layout: side
+
+---
+
+## Fibonacci Sequence
+
+<Side>
+
+$$F(0)=1$$
+
+$$F(1)=1$$
+
+$$F(n)=F(n-1)+F(n-2)$$
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+## Naive implementation
+
+```typescript
+function fibonacci(n: number): number {
+  if (n < 2) return 1;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+<Doc label="001-naive.ts" />
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+<Appear>
+
+**Teaching/Instructor** @Human Coders, Supinfo, Efrei<br />
+
+</Appear>
+
+<Appear>
+
+**Tech Lead** @Accelerator by Sanofi<br />
+
+</Appear>
+
+<Appear>
+
+_I post (sometimes/often?) on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+## Naive implementation
+
+```typescript
+function fibonacci(n: number): number {
+  if (n < 2) return 1;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+<Appear>
+
+```text
+Computing fibonacci(10)
+fibonacci: 0.012667000000021744ms (result: 89)
+
+Computing fibonacci(46)
+fibonacci: 17010.302417ms (result: 2971215073)
+```
+
+</Appear>
+
+<Doc label="001-naive.ts" />
+
+---
+
+layout: sidedImage
+
+---
+
+### Naive implementation: issues
+
+Exponential time complexity: **O(2^n)**
+
+import complexities from "./complexities.jpg";
+
+<Image src={complexities} style={{ maxHeight: "30vh" }} />
+
+---
+
+layout: sidedCode
+
+---
+
+### Dynamic Programming
+
+```javascript
+function fibonacci(n) {
+  const fib = [0, 1];
+  for (let i = 2; i <= n; i++) {
+    fib[i] = fib[i - 1] + fib[i - 2];
+  }
+  return fib[n];
+}
+```
+
+<Side>
+
+<Appear>
+
+```text
+Computing fibonacci(10)
+fibonacci: 0.012333000000012362ms (result: 55)
+
+Computing fibonacci(45)
+fibonacci: 0.004792000000009011ms (result: 1134903170)
+
+Computing fibonacci(10000)
+fibonacci: 0.41187500000023647ms (result: Infinity)
+
+```
+
+</Appear>
+
+</Side>
+
+<Doc label="002-dynamic-approach.ts" />
+
+---
+
+layout: centered
+
+---
+
+import infinity from "./infinity.jpg";
+
+<Image src={infinity} style={{ maxHeight: "40vh" }} />
+
+# &nbsp;
+
+---
+
+layout: side
+
+---
+
+### Numbers limits in JavaScript
+
+<Side>
+<ItemsColumn>
+
+From `Number.MAX_SAFE_INTEGER` to `Number.MIN_SAFE_INTEGER`
+
+Integers from **-2^53 + 1** to **2^53 - 1**
+
+**-9007199254740991** to **9007199254740991**
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: sidedImage
+
+---
+
+## BigInts
+
+import savior from "./savior.jpg";
+
+<Image src={savior} style={{ maxHeight: "60vh" }} />
+
+<Side>
+<ItemsColumn>
+
+No "Limit"
+
+`BigInt(15)` or `15n`
+
+Non constant time complexity for operations
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Dynamic Approach with BigInts**
+
+```typescript
+function fibonacci(n: number): BigInt {
+  const memo: bigint[] = [0n, 1n];
+  for (let i = 2; i <= n; i++) {
+    memo.push(memo[i - 1] + memo[i - 2]);
+  }
+  return memo[n];
+}
+```
+
+<Appear>
+
+```text
+Computing fibonacci(10)
+fibonacci: 0.018000000000000682ms (result: 55)
+
+Computing fibonacci(45)
+fibonacci: 0.01012499999998795ms (result: 1134903170)
+
+Computing fibonacci(10000)
+fibonacci: 2.1965840000000014ms (result: 33644[...]66875)
+```
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+import didthejob from "./bigint.jpg";
+
+<Image src={didthejob} style={{ maxHeight: "50vh" }} />
+
+# &nbsp;
+
+---
+
+layout: centered
+
+---
+
+## Let's try the millionth number
+
+---
+
+layout: centered
+
+---
+
+import gc from "./gc.png";
+
+# &nbsp;
+
+import fail from "./fail.webp";
+
+<div style={{ display: "flex", gap: "2rem" }}>
+  <Image src={gc} style={{ maxWidth: "40vw", flex: 1, objectFit: "contain" }} />
+  <div style={{ flex: 1 }}>
+    <Image src={fail} style={{ maxHeight: "100vh", minHeight: "60vh" }} />
+  </div>
+</div>
+
+---
+
+layout: centered
+
+---
+
+## GC + still slow... (linear time)
+
+<Appear>
+
+## ~6s for 1 000 000th number
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+<div style={{zoom: 2, marginBottom: '4rem' }}>
+
+$$F(n)=\frac{1}{\sqrt{5}}[(\frac{1+\sqrt{5}}{2})^n - (\frac{1-\sqrt{5}}{2})^n]$$
+
+</div>
+
+### Binet's Formula
+
+---
+
+layout: centered
+
+---
+
+import relief from "./relief.png";
+
+<Image src={relief} style={{ maxHeight: "50vh" }} />
+
+# &nbsp;
+
+---
+
+layout: side
+
+---
+
+### A solution?
+
+<Side>
+<ItemsColumn>
+
+$$\begin{pmatrix}F(2) \\ F(1)\end{pmatrix} = \begin{pmatrix}1 & 1 \\ 1 & 0\end{pmatrix} \begin{pmatrix}F(1) \\ F(0)\end{pmatrix}$$
+
+$$\begin{pmatrix}F(3) \\ F(2)\end{pmatrix} = \begin{pmatrix}1 & 1 \\ 1 & 0\end{pmatrix} \begin{pmatrix}F(2) \\ F(1)\end{pmatrix}$$
+
+$$\begin{pmatrix}F(3) \\ F(2)\end{pmatrix} = \begin{pmatrix}1 & 1 \\ 1 & 0\end{pmatrix}^2 \begin{pmatrix}F(1) \\ F(0)\end{pmatrix}$$
+
+$$\begin{pmatrix}F(n)\\F(n-1)\end{pmatrix}=\begin{pmatrix}1&1\\1&0\end{pmatrix}^{n-1}\begin{pmatrix}F(1)\\F(0)\end{pmatrix}$$
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+## Fast Exponentiation
+
+<Side>
+  <ItemsColumn>
+
+    $$x^n = x * x * x * ... * x \space(n \text{ times})$$
+
+    $$x^n = x^{n/2} * x^{n/2} \space(\text{if}\space n \text{ is even})$$
+
+  </ItemsColumn>
+</Side>
+
+<Appear priority={1000}>
+
+Logarithmic time complexity
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### Implementing Matrix Exponentiation
+
+```javascript
+function fastPowMatrix(a: Matrix22, n: number): Matrix22 {
+  if (n === 0) return MatrixIdentity;
+  if (n === 1) return a;
+  const b = fastPowMatrix(a, Math.floor(n / 2));
+  const b2 = multiplyMatrix(b, b);
+  return n % 2 === 0 ? b2 : multiplyMatrix(b2, a);
+}
+
+function fibonacci(n: number): BigInt {
+  if (n < 2) return 1n;
+
+  const mul = pow(M0, n - 1);
+  return mul[0][0] + mul[0][1];
+}
+```
+
+<Side>
+  <Appear>
+
+```text
+Computing fibonacci(10)
+fibonacci: 0.04095799999998917ms (result: 55)
+
+Computing fibonacci(45)
+fibonacci: 0.01979199999999537ms (result: 1134903170)
+
+Computing fibonacci(10_000_000)
+fibonacci: 317.1009590000001ms
+
+Computing fibonacci(100_000_000)
+fibonacci: 4687.540042ms
+```
+
+  </Appear>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **That's all?**
+
+import blocking from "./blocking.jpeg";
+
+<Appear>
+
+<Image src={blocking} style={{ maxHeight: "50vh" }} />
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Unit of Work**
+
+```javascript
+// @step highlight(1)
+// @step highlight(4)
+// @step highlight(9)
+// @step highlight(12)
+async function fastPowMatrix(a: Matrix22, n: number): Matrix22 {
+  if (n === 0) return MatrixIdentity;
+  if (n === 1) return a;
+  const b = await promisify(() => fastPowMatrix(a, Math.floor(n / 2));
+  const b2 = multiplyMatrix(b, b);
+  return n % 2 === 0 ? b2 : multiplyMatrix(b2, a);
+}
+
+async function fibonacci(n: number): BigInt {
+  if (n < 2) return 1n;
+
+  const mul = await pow(M0, n - 2);
+  return mul[0][0] + mul[0][1];
+}
+
+const promisify = (fn) => () => new Promise((resolve) => {
+  setImmediate(() => resolve(fn()));
+});
+```
+
+<Appear priority={1000}>
+
+Easy peasy! Won't block the event loop.
+
+</Appear>
+
+<Appear priority={1000}>
+
+But still in the main process (Memory/CPU).
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Worker threads**
+
+```javascript
+import { Worker, isMainThread, parentPort } from "node:worker_threads";
+
+if (isMainThread) {
+  const worker = new Worker(__filename);
+  worker.on("message", (result) => console.log(result));
+  worker.postMessage(10);
+} else {
+  parentPort.on("message", (n) => {
+    parentPort.postMessage(fibonacci(n));
+  });
+}
+```
+
+<Appear priority={1000}>
+
+Isolated thread, no shared memory.
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **N-API and Rust**
+
+```rust
+#[napi]
+pub async fn fibonacci(n: i64) -> Result<String> {
+    if n < 0 {
+        return Err(Error::new(
+            Status::InvalidArg,
+            "Fibonacci index must be non-negative".to_string(),
+        ));
+    }
+
+    let n = n as u64;
+
+    tokio::task::spawn_blocking(move || compute_fibonacci(n))
+        .await
+        .map_err(|e| Error::new(
+            Status::GenericFailure,
+            format!("Task failed: {}", e)
+        ))?
+}
+```
+
+<Appear>
+
+More work: requires to reimplement the algorithm in Rust.
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **Merci 🙏**
+
+<Appear>
+
+:qrcode[https://tally.so/r/w4xxVY?Talk=FIBO]
+
+<Text style={{ margin: "auto" }}>⬆️ **Feedback** ⬆️</Text>
+
+</Appear>
+
+<Appear>
+
+### **Questions ?**
+
+</Appear>

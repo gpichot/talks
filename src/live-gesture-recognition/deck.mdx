@@ -1,0 +1,255 @@
+---
+title: "Gesture Recognition with ML & React: A Web Developer's Guide"
+---
+
+layout: mainSection
+
+---
+
+import { Notes, Appear, Doc, Text } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn } from "@gpichot/spectacle-deck";
+
+# **Live Gesture Recognition in the Browser**
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+<Appear>
+
+**Teaching/Instructor** @Human Coders, Supinfo, Efrei<br />
+
+</Appear>
+
+<Appear>
+
+**Tech Lead** @Accelerator by Sanofi<br />
+
+</Appear>
+
+<Appear>
+
+_I post (sometimes/often?) on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+:qrcode[https://gesture-recognition-beryl.vercel.app/]
+
+# Demo Time! 🙃
+
+---
+
+layout: sidedImage
+
+---
+
+### **Browser side**
+
+import online from "./online-pipeline.svg";
+
+<Image
+  src={online}
+  style={{ minHeight: "80vh", maxHeight: "80vh", minWidth: "50vw" }}
+/>
+
+A React app:
+
+- ask user for webcam access
+- loads the model
+- do live categorization
+
+Nothing is sent to the backend (there is no backend)
+
+---
+
+layout: sidedImage
+
+---
+
+### **Training the model**
+
+import learningProcess from "./learning-process.svg";
+
+<Image
+  src={learningProcess}
+  style={{ minHeight: "80vh", maxHeight: "80vh", minWidth: "55vw" }}
+/>
+
+1. Take some pictures for training by category
+
+2. Use MediaPipe to extract hand landmarks
+
+3. Train a neural network with TensorFlow for classification
+
+4. BINGO! 🎉 You got your model
+
+---
+
+layout: side
+
+---
+
+### **MediaPipe**
+
+Google's open-source framework for ML pipelines
+
+<Side>
+
+Pre-trained models for:
+
+- Hand tracking
+- Face detection
+- Pose estimation
+- Object detection
+
+Works in browsers via WebAssembly and WebGL
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import landmarks from "./hand_landmarks.png";
+
+<Image
+  src={landmarks}
+  alt="Hand landmarks diagram showing 21 points on a hand"
+  style={{ maxHeight: "40vh", marginBottom: "2rem" }}
+/>
+
+### **Hand Landmarks**
+
+---
+
+layout: sidedCode
+
+---
+
+```python
+// @step showLines(1-3) highlight(1-3) name("Split train/test")
+// @step showLines(4-15) highlight(5-15) name("Define model")
+// @step showLines(16-19) highlight(17-19) name("Compile model")
+// @step showLines(20-21) highlight(21) name("Train")
+// @step showLines(22-24) highlight(23) name("Evaluate accuracy")
+// @step showLines(25-26) highlight(26) name("Save model")
+X_train, X_test, y_train, y_test = train_test_split(
+    data, labels, test_size=0.2, random_state=42
+)
+
+model = Sequential(
+    [
+        Input(shape=(X_train.shape[1],)),
+        Dense(128, activation="relu"),
+        Dropout(0.5),
+        BatchNormalization(),
+        Dense(64, activation="relu"),
+        Dropout(0.5),
+        Dense(len(label_map), activation="softmax"),
+    ]
+)
+
+model.compile(
+    optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+)
+
+history = model.fit(X_train, y_train, epochs=50, validation_split=0.2, verbose=1)
+
+test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)
+print(f"Test accuracy: {test_acc}")
+
+model.save("hand_gesture_model.keras")
+```
+
+---
+
+layout: sidedCode
+
+---
+
+## React Component for Gesture Recognition
+
+```jsx
+import React, { useEffect, useRef, useState } from "react";
+import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-webgl";
+import "@mediapipe/hands";
+
+function GestureRecognition() {
+  const [model, setModel] = useState(null);
+  const [gesture, setGesture] = useState("None");
+  const videoRef = useRef(null);
+
+  // Load model on component mount
+  useEffect(() => {
+    const loadModel = async () => {
+      const loadedModel = await tf.loadLayersModel("/model/model.json");
+      setModel(loadedModel);
+    };
+    loadModel();
+  }, []);
+
+  // Process video frames
+  const processFrame = async () => {
+    // Use MediaPipe to get hand landmarks
+    // Use TensorFlow.js model to predict gesture
+    // Update state with recognized gesture
+  };
+
+  return (
+    <div className="gesture-recognition">
+      <video ref={videoRef} />
+      <div className="gesture">Current gesture: {gesture}</div>
+    </div>
+  );
+}
+```
+
+---
+
+layout: side
+
+---
+
+## Benefits of this approach
+
+<Side>
+<ItemsColumn>
+
+- Privacy: processing happens on device
+
+- No server costs or latency
+
+- Works offline
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+# Thank you!
+
+:qrcode[https://tally.so/r/w4xxVY?Talk=GESTURE_RECOGNITION]
+
+### Questions?
