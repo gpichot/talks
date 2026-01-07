@@ -38,7 +38,13 @@ import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
 
 <Appear>
 
-_I post (sometimes/often?) on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+**Org** of React Paris Meetups
+
+</Appear>
+
+<Appear>
+
+_I post on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
 
 </Appear>
 
@@ -64,7 +70,12 @@ import online from "./online-pipeline.svg";
 
 <Image
   src={online}
-  style={{ minHeight: "80vh", maxHeight: "80vh", minWidth: "50vw" }}
+  style={{
+    minHeight: "60vh",
+    maxHeight: "80vh",
+    minWidth: "40vw",
+    maxWidth: "55vw",
+  }}
 />
 
 A React app:
@@ -77,26 +88,11 @@ Nothing is sent to the backend (there is no backend)
 
 ---
 
-layout: sidedImage
+layout: centered
 
 ---
 
-### **Training the model**
-
-import learningProcess from "./learning-process.svg";
-
-<Image
-  src={learningProcess}
-  style={{ minHeight: "80vh", maxHeight: "80vh", minWidth: "55vw" }}
-/>
-
-1. Take some pictures for training by category
-
-2. Use MediaPipe to extract hand landmarks
-
-3. Train a neural network with TensorFlow for classification
-
-4. BINGO! 🎉 You got your model
+## How do we **train a model**? 🤔 🤔
 
 ---
 
@@ -104,11 +100,51 @@ layout: side
 
 ---
 
-### **MediaPipe**
+### **First we collect data**
+
+import thumbsUp from "./thumbs_up_42.png";
+
+<Side>
+<ItemsColumn>
+
+<Image src={thumbsUp} alt="Thumbs up" style={{ maxWidth: "40vw" }} />
+
+⬆️ The data ⬆️
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Then we cheat (a little) with MediaPipe**
+
+<Appear priority={0}>
+
+<Image src={offended} alt="Offended" style={{ maxHeight: "30vh" }} />f
+
+</Appear>
+
+<Appear progress={10}>
 
 Google's open-source framework for ML pipelines
 
+</Appear>
+
+<Appear priority={50}>
+
+We use it to extract hand landmarks
+
+</Appear>
+
 <Side>
+
+import offended from "./offended.jpg";
+
+<Appear priority={100}>
 
 Pre-trained models for:
 
@@ -118,6 +154,8 @@ Pre-trained models for:
 - Object detection
 
 Works in browsers via WebAssembly and WebGL
+
+</Appear>
 
 </Side>
 
@@ -132,10 +170,111 @@ import landmarks from "./hand_landmarks.png";
 <Image
   src={landmarks}
   alt="Hand landmarks diagram showing 21 points on a hand"
-  style={{ maxHeight: "40vh", marginBottom: "2rem" }}
+  style={{
+    maxHeight: "40vh",
+    marginBottom: "2rem",
+    maxWidth: "60vw",
+    objectFit: "contain",
+  }}
 />
 
 ### **Hand Landmarks**
+
+---
+
+layout: side
+
+---
+
+### **And then we train a neural network**
+
+A neural network with TensorFlow for classification
+
+import allsgood from "./allsgood.jpg";
+
+<Side>
+<ItemsColumn>
+
+Do not worry, it's not that hard
+
+<Image src={allsgood} alt="All's good" style={{ width: "35vw" }} />
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: sidedImage
+
+---
+
+import perceptron from "./perceptron.svg";
+
+<Image src={perceptron} style={{ maxWidth: "50vw" }} />
+
+### **The perceptron**
+
+---
+
+layout: sidedImage
+
+---
+
+import neuralNetwork from "./neural-network.svg";
+
+<Image
+  src={neuralNetwork}
+  style={{
+    minHeight: "80vh",
+    maxHeight: "80vh",
+    minWidth: "40vw",
+    maxWidth: "60vw",
+  }}
+/>
+
+### **Neural Network**
+
+- N inputs
+- X hidden layers
+- M outputs
+
+---
+
+layout: sidedImage
+
+---
+
+### **If we sum up**
+
+import learningProcess from "./learning-process.svg";
+
+<Image
+  src={learningProcess}
+  style={{
+    minWidth: "40vw",
+    maxWidth: "55vw",
+  }}
+/>
+
+1. Take some pictures for training by category
+
+2. Use MediaPipe to extract hand landmarks
+
+3. Train a neural network with TensorFlow for classification
+
+---
+
+layout: centered
+
+---
+
+import video from "./easypeasy.gif";
+
+<Image src={video} alt="Easy peasy" style={{ maxHeight: "40vh" }} />
+
+<div style={{ fontSize: "1.5rem" }}>&nbsp;</div>
+
+### **BINGO! 🎉 You got your model**
 
 ---
 
@@ -178,47 +317,101 @@ print(f"Test accuracy: {test_acc}")
 model.save("hand_gesture_model.keras")
 ```
 
+### **Neural networks**
+
+---
+
+layout: centered
+
+---
+
+### **Training time?** <Appear>less than a minute</Appear>
+
 ---
 
 layout: sidedCode
 
 ---
 
-## React Component for Gesture Recognition
+### In the browser
 
 ```jsx
-import React, { useEffect, useRef, useState } from "react";
-import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-webgl";
-import "@mediapipe/hands";
+// @step showLines(12,28) highlight(28) name("Retrieve camera feed")
+// @step showLines(13-14,16,24,18-20) highlight(19) name("Detect")
+// @step showLines(15,17,21-23) highlight(21) name("Every 0.5 seconds")
+// @step showLines(5-9,29) highlight(29) name("Display emoji")
+import React, { useRef, useState, useEffect } from "react";
+import Webcam from "react-webcam";
+import { useCurrentGesture } from "./utils";
+
+// Emoji mapping for recognized gestures
+const SignToEmoji = {
+  thumbs_up: "👍",
+  // ...
+};
 
 function GestureRecognition() {
-  const [model, setModel] = useState(null);
-  const [gesture, setGesture] = useState("None");
-  const videoRef = useRef(null);
+  const webcamRef = useRef(null);
+  const { detect, gesture } = useCurrentGesture();
 
-  // Load model on component mount
+  // Run prediction every 500ms
   useEffect(() => {
-    const loadModel = async () => {
-      const loadedModel = await tf.loadLayersModel("/model/model.json");
-      setModel(loadedModel);
-    };
-    loadModel();
-  }, []);
+    const interval = setInterval(() => {
+      if (webcamRef.current?.video) {
+        detect(webcamRef.current.video);
+      }
+    }, 500);
 
-  // Process video frames
-  const processFrame = async () => {
-    // Use MediaPipe to get hand landmarks
-    // Use TensorFlow.js model to predict gesture
-    // Update state with recognized gesture
-  };
+    return () => clearInterval(interval);
+  }, [detect]);
 
   return (
-    <div className="gesture-recognition">
-      <video ref={videoRef} />
-      <div className="gesture">Current gesture: {gesture}</div>
+    <div className="App">
+      <Webcam ref={webcamRef} mirrored />
+      <div className="emoji">{gesture ? SignToEmoji[gesture] : ""}</div>
     </div>
   );
+}
+```
+
+---
+
+layout: sidedCode
+
+---
+
+### **Just more code**
+
+```tsx
+// @step showLines(10-12) highlight(10-11) name("Detect landmarks")
+// @step showLines(13-17) highlight(13-17) name("Take only first one")
+// @step showLines(18-21) highlight(18-19) name("Predict")
+import * as tf from "@tensorflow/tfjs";
+import { HandLandmarker } from "@mediapipe/tasks-vision";
+import { useEffect, useState, useCallback } from "react";
+
+export function useCurrentGesture() {
+  const [gesture, setGesture] = useState(null);
+
+  const detect = useCallback(
+    async (video) => {
+      const handLandmarks = handLandmarker.detect(video);
+      if (!handLandmarks.landmarks?.length) return;
+
+      const landmarks = handLandmarks.landmarks[0].flatMap((lm) => [
+        lm.x,
+        lm.y,
+        lm.z,
+      ]);
+      const prediction = await model.predict(tf.tensor([landmarks])).array();
+      const bestMatch = prediction[0].indexOf(Math.max(...prediction[0]));
+
+      setGesture(gestureMap[bestMatch]);
+    },
+    [handLandmarker, model],
+  );
+
+  return { gesture, detect };
 }
 ```
 
@@ -228,18 +421,40 @@ layout: side
 
 ---
 
-## Benefits of this approach
+## **Benefits**
 
 <Side>
-<ItemsColumn>
 
 - Privacy: processing happens on device
 
-- No server costs or latency
+- No server costs, less latency
 
 - Works offline
 
-</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **What can we do with it?**
+
+<Appear priority={100}>
+
+A good start to play with ML in the browser
+
+</Appear>
+
+import shrug from "./shrug.jpeg";
+
+<Side>
+<Appear>
+
+<Image src={shrug} alt="Shrug" style={{ maxWidth: "40vw" }} />
+
+</Appear>
 </Side>
 
 ---
@@ -253,3 +468,13 @@ layout: centered
 :qrcode[https://tally.so/r/w4xxVY?Talk=GESTURE_RECOGNITION]
 
 ### Questions?
+
+---
+
+layout: centered
+
+---
+
+:qrcode[https://craftvalue.notion.site/Lab-Realtime-Gesture-Recognition-300-fc45623b93fd493dad781c9188e386e7?pvs=4]
+
+### Lab

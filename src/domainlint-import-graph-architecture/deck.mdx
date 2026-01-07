@@ -1,0 +1,716 @@
+---
+title: "Your import graph is your real architecture"
+---
+
+layout: mainSection
+
+---
+
+import { Notes, Appear, Doc, Text } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn } from "@gpichot/spectacle-deck";
+
+# **Your import graph is your real architecture**
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+<Appear>
+
+**Tech Lead** @Accelerator by Sanofi<br />
+
+</Appear>
+
+<Appear>
+
+**Org** of React Paris Meetups
+
+</Appear>
+
+<Appear>
+
+_I post on [LinkedIn](https://www.linkedin.com/in/gabrielpichot/)_
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **The Classic Structure**
+
+<Side>
+<ItemsColumn>
+
+```
+src/
+  components/
+  hooks/
+  api/
+  utils/
+```
+
+<Appear>
+
+Works great... at first
+
+</Appear>
+
+<Appear>
+
+Fast forward 6 months...
+
+"All 1000 components are here"
+
+</Appear>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **The Great Refactoring Decision**
+
+<Appear>
+
+"Let's do feature-based directories!"
+
+</Appear>
+
+<Appear>
+
+```
+src/
+  features/
+    authentication/
+    user-profile/
+    dashboard/
+    settings/
+```
+
+</Appear>
+
+<Appear>
+
+Everyone's excited! Looks beautiful! 🎉
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **Six months later...**
+
+import bikeFall from "./bike-fall.jpg";
+
+<Image src={bikeFall} alt="Bike fall meme" style={{ maxHeight: "60vh" }} />
+
+"Damn developers, they don't respect architecture!"
+
+---
+
+layout: side
+
+---
+
+### **The Reality Check**
+
+<Side>
+<ItemsColumn>
+
+<Appear>
+
+Feature A imports from Feature B
+
+</Appear>
+
+<Appear>
+
+Feature B imports from Feature A
+
+</Appear>
+
+<Appear>
+
+Feature C imports from both
+
+</Appear>
+
+<Appear>
+
+Everyone imports from everyone
+
+</Appear>
+
+<Appear>
+
+**Coupling is everywhere**
+
+</Appear>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import spaghetti from "./spaghetti-graph.png";
+
+<Image src={spaghetti} alt="Spaghetti dependency graph" style={{ maxHeight: "60vh" }} />
+
+### **Your actual architecture**
+
+---
+
+layout: centered
+
+---
+
+## **"But We Have Spaghetti Code!"**
+
+<Appear>
+
+Okay... but **how much**?
+
+</Appear>
+
+<Appear>
+
+What's the **scale**?
+
+</Appear>
+
+<Appear>
+
+Which features are **worst**?
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **You can't fix what you don't measure**
+
+---
+
+layout: side
+
+---
+
+### **The ESLint Trap**
+
+import trap from "./trap.jpg";
+
+<Side>
+
+<Appear>
+
+<Image src={trap} alt="Trap card" style={{ maxWidth: "40vw" }} />
+
+</Appear>
+
+</Side>
+
+<Appear>
+
+```js
+// eslint config attempt
+"import/no-restricted-paths": [
+  "error",
+  {
+    zones: [
+      {
+        target: "./src/features/authentication",
+        from: "./src/features/dashboard"
+      },
+      // ... 50 more rules
+    ]
+  }
+]
+```
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **Why Traditional Linters Fail**
+
+<Side>
+<ItemsColumn>
+
+<Appear>
+
+**ESLint**: analyzes files in isolation
+
+</Appear>
+
+<Appear>
+
+**Biome**: same limitation
+
+</Appear>
+
+<Appear>
+
+Neither builds the **full import graph**
+
+</Appear>
+
+<Appear>
+
+Can't detect **cycles across multiple files**
+
+</Appear>
+
+<Appear>
+
+Configuration becomes **unmaintainable at scale**
+
+</Appear>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **The Import Graph Approach**
+
+<Appear>
+
+Build a global map of **ALL** imports
+
+</Appear>
+
+<Appear>
+
+See the full picture, not just one file
+
+</Appear>
+
+---
+
+layout: sidedImage
+
+---
+
+import graphDiagram from "./import-graph-diagram.png";
+
+<Image src={graphDiagram} style={{ maxWidth: "50vw" }} />
+
+### **How It Works**
+
+- Uses **SWC** parser (fast!)
+- Supports **TypeScript**
+- Handles **dynamic imports**
+- Builds **complete dependency graph**
+
+---
+
+layout: centered
+
+---
+
+### **Live Demo: The Tool in Action**
+
+<Appear>
+
+1000 files analyzed in < 1s
+
+</Appear>
+
+<Appear>
+
+import mindblown from "./mindblown.png";
+
+<Image src={mindblown} alt="Mind blown" style={{ maxHeight: "40vh" }} />
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+import graphViz from "./graph-visualization.png";
+
+<Image src={graphViz} alt="Graph visualization" style={{ maxHeight: "60vh" }} />
+
+### **Visualize the Chaos**
+
+Cycles in red • Deep imports exposed
+
+---
+
+layout: centered
+
+---
+
+## **Three Simple Rules**
+
+---
+
+layout: side
+
+---
+
+### **Rule 1: No Deep Imports**
+
+Always import from barrel files (`index.ts`)
+
+<Side>
+
+<Appear>
+
+```typescript
+// ❌ Bad
+import { Button } from "../features/ui/components/Button";
+
+// ✅ Good
+import { Button } from "../features/ui";
+```
+
+</Appear>
+
+<Appear>
+
+Enforces clear **public APIs**
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Rule 2: No Cyclic Dependencies**
+
+Between features OR within features
+
+<Side>
+
+<Appear>
+
+```typescript
+// ❌ Bad
+// authentication/index.ts
+import { Dashboard } from "../dashboard";
+
+// dashboard/index.ts
+import { useAuth } from "../authentication";
+```
+
+</Appear>
+
+<Appear>
+
+```typescript
+// ✅ Good
+// shared/auth/index.ts
+export const useAuth = () => { ... }
+
+// Both features import from shared
+```
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Rule 3: Features Are Isolated**
+
+No imports outside of features from inside features
+
+<Side>
+
+<Appear>
+
+```typescript
+// ❌ Bad - feature importing from feature
+// features/dashboard/index.ts
+import { UserProfile } from "../user-profile";
+
+// ✅ Good - extract to shared
+// shared/types/user.ts
+export type User = { ... }
+
+// Both features import from shared
+```
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Setting Up the Rules**
+
+```json
+// @step showLines(1-10) highlight(3-9) name("Configuration")
+{
+  "rules": {
+    "no-deep-imports": {
+      "enabled": true,
+      "allow": ["@/*", "~/*"]
+    },
+    "no-cyclic-dependencies": true,
+    "features-isolation": {
+      "featuresPath": "src/features"
+    }
+  }
+}
+```
+
+---
+
+layout: centered
+
+---
+
+### **Demo: Fix One Example**
+
+---
+
+layout: centered
+
+---
+
+## **Beyond Linting**
+
+import galaxyBrain from "./galaxy-brain.jpg";
+
+<Image src={galaxyBrain} alt="Galaxy brain" style={{ maxHeight: "40vh" }} />
+
+---
+
+layout: side
+
+---
+
+### **Architecture Visibility**
+
+<Side>
+<ItemsColumn>
+
+<Appear>
+
+Generate **visual graphs**
+
+</Appear>
+
+<Appear>
+
+See **coupling metrics**
+
+</Appear>
+
+<Appear>
+
+Track **improvement over time**
+
+</Appear>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **AI-Assisted Migration**
+
+Import graph = **structured data** for AI
+
+<Side>
+
+<Appear>
+
+Feed the graph to **Claude/ChatGPT** with your prompt
+
+</Appear>
+
+<Appear>
+
+AI suggests refactoring paths based on **actual dependencies**
+
+</Appear>
+
+<Appear>
+
+"Move feature X by updating these 12 imports"
+
+vs "figure it out yourself"
+
+</Appear>
+
+<Appear>
+
+**Makes AI 10x more effective** at large refactorings
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Stepping Stone to Monorepo**
+
+<Side>
+<ItemsColumn>
+
+<Appear>
+
+Fix cycles **BEFORE** migrating to nx/pnpm workspaces
+
+</Appear>
+
+<Appear>
+
+Catch issues early
+
+</Appear>
+
+<Appear>
+
+Smooth transition when ready
+
+</Appear>
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **Results**
+
+<Side>
+<ItemsColumn>
+
+Clear **ownership**
+
+Easier **refactoring**
+
+Better **onboarding**
+
+Enforced **boundaries** that actually last
+
+</ItemsColumn>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **Key Takeaways**
+
+<Appear>
+
+Your **file tree** is aspirational
+
+</Appear>
+
+<Appear>
+
+Your **import graph** is reality
+
+</Appear>
+
+<Appear>
+
+Architecture needs **enforcement**, not wishful thinking
+
+</Appear>
+
+<Appear>
+
+**Measure first**: build the graph, see the truth
+
+</Appear>
+
+<Appear>
+
+**Computed data = better AI prompts = faster migrations**
+
+</Appear>
+
+<Appear>
+
+Start simple: **3 rules** prevent chaos
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+# Thank you!
+
+### Questions?
+
+---
+
+layout: centered
+
+---
+
+:qrcode[https://tally.so/r/w4xxVY?Talk=IMPORT_GRAPH_ARCHITECTURE]
+
+### Feedback
