@@ -1,0 +1,1024 @@
+---
+author: Gabriel Pichot
+title: "React Won't Solve Your Problems"
+summary: >
+  React keeps evolving, yet our projects keep failing in familiar ways.
+  Even with AI helping us move faster than ever, we often end up in the same places.
+  This talk wonders why some patterns never change, no matter how modern our stack becomes.
+tags: ["react", "architecture", "cognitive-load", "ai", "domainlint"]
+outline: >
+  - The illusion of progress
+  - React history: reactive evolution
+  - Cognitive load and the real problem
+  - domainlint: architecture as code
+  - AI and constraints
+  - The real bottleneck
+---
+
+import { Appear } from "spectacle";
+import { Side, ItemsColumn, Notes } from "@gpichot/spectacle-deck";
+
+---
+layout: mainSection
+
+# React Won't Solve Your Problems
+
+Going faster ≠ going in the right direction
+
+<Notes>
+
+React Paris — Gabriel Pichot
+
+</Notes>
+
+---
+layout: centered
+
+# "We've never shipped faster. We've never been more confused."
+
+<Appear>
+
+More frameworks
+
+</Appear>
+
+<Appear>
+
+More tools
+
+</Appear>
+
+<Appear>
+
+More patterns
+
+</Appear>
+
+<Appear>
+
+→ More complexity
+
+</Appear>
+
+<Notes>
+
+Open with shared pain. The audience feels this every day.
+
+</Notes>
+
+---
+layout: centered
+
+# The Illusion of Choice
+
+<Appear>
+
+NextJS
+
+</Appear>
+
+<Appear>
+
+Remix
+
+</Appear>
+
+<Appear>
+
+TanStack Start
+
+</Appear>
+
+<Appear>
+
+Astro
+
+</Appear>
+
+<Appear>
+
+### Are we solving problems… or rotating solutions?
+
+</Appear>
+
+<Notes>
+
+We had React Router for 10 years. Why do we keep rewriting the same thing?
+
+</Notes>
+
+---
+layout: centered
+
+# The Real Question
+
+### "What problem are we actually solving?"
+
+<Notes>
+
+This is the thesis of the talk. Everything that follows supports this question.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 1 — The History
+
+Why React evolved
+
+---
+layout: centered
+
+# Before React
+
+<Appear>
+
+**jQuery** — manual DOM updates
+
+</Appear>
+
+<Appear>
+
+UI freezes everywhere
+
+</Appear>
+
+<Appear>
+
+Too many reads/writes → layout thrashing
+
+</Appear>
+
+<Appear>
+
+DOM Tree, CSSOM Tree — every read/write can force relayout and repainting
+
+</Appear>
+
+<Notes>
+
+jQuery wasn't bad. It was solving real problems. But the DOM API made it easy to shoot yourself in the foot.
+
+</Notes>
+
+---
+layout: centered
+
+# React Arrives
+
+<Appear>
+
+Virtual DOM
+
+</Appear>
+
+<Appear>
+
+Batched updates
+
+</Appear>
+
+<Appear>
+
+### "We stopped thinking in DOM operations"
+
+</Appear>
+
+<Notes>
+
+Angular and React both solved this: bundling DOM updates. React's mental model — components — was the real win. Not a huge API.
+
+</Notes>
+
+---
+layout: centered
+
+# Then More Problems
+
+<Appear>
+
+Still blocking the UI
+
+</Appear>
+
+<Appear>
+
+Large bundles
+
+</Appear>
+
+<Appear>
+
+Data fetching chaos
+
+</Appear>
+
+<Appear>
+
+`useTransition` / Concurrent Mode / OffScreen
+
+</Appear>
+
+<Notes>
+
+Each new React feature addresses a symptom. Concurrent React exists to "debundle" DOM updates — separating urgent from non-urgent.
+
+</Notes>
+
+---
+layout: centered
+
+# So We Added…
+
+<Appear>
+
+Concurrent React
+
+</Appear>
+
+<Appear>
+
+Server Components
+
+</Appear>
+
+<Appear>
+
+Client / Server split
+
+</Appear>
+
+<Appear>
+
+SSR Frameworks (NextJS: "how to generate React server-side for SEO?")
+
+</Appear>
+
+<Appear>
+
+### Each step solves a symptom
+
+</Appear>
+
+<Notes>
+
+NextJS started as an answer to SEO. Server Components started as an answer to bundle size. Each is reactive, not proactive.
+
+</Notes>
+
+---
+layout: centered
+
+# Key Insight
+
+### "React's evolution is reactive, not directional."
+
+<Notes>
+
+The React team responds to pain. That's not a criticism — it's a pattern to recognize. The real innovation was incidental: components, not a huge API.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 2 — The Real Problem
+
+Step back before choosing tools
+
+---
+layout: centered
+
+# Before Choosing Tools
+
+<Appear>
+
+**How** — the implementation
+
+</Appear>
+
+<Appear>
+
+**What** — the feature
+
+</Appear>
+
+<Appear>
+
+**Why** — the purpose
+
+</Appear>
+
+<Notes>
+
+This is the core framework. Most teams start with How. The right order is Why → What → How.
+
+</Notes>
+
+---
+layout: centered
+
+# The Trap
+
+Most teams work backwards:
+
+<Appear>
+
+**How** → What → Why
+
+</Appear>
+
+<Appear>
+
+### "We picked the framework before we understood the problem."
+
+</Appear>
+
+<Notes>
+
+This is hype-driven development. You pick NextJS because it's popular, then figure out what you're building.
+
+</Notes>
+
+---
+layout: centered
+
+# Cognitive Load Theory
+
+<Appear>
+
+**Intrinsic** → the real complexity of the problem
+
+</Appear>
+
+<Appear>
+
+**Extraneous** → tooling noise, incidental complexity
+
+</Appear>
+
+<Appear>
+
+**Germane** → the effort that builds understanding
+
+</Appear>
+
+<Notes>
+
+From cognitive science. The goal is to minimize extraneous load so you can maximize germane load — actual learning and understanding.
+
+</Notes>
+
+---
+layout: centered
+
+# The Problem
+
+### "Most frontend complexity today is extraneous."
+
+<Appear>
+
+Routing mental models
+
+</Appear>
+
+<Appear>
+
+Server / client split
+
+</Appear>
+
+<Appear>
+
+Data fetching patterns
+
+</Appear>
+
+<Appear>
+
+TanStack Query vs Redux — a DX question, not a user problem
+
+</Appear>
+
+<Notes>
+
+We spend our cognitive budget on tooling decisions instead of product decisions. TanStack Query vs Redux is a How question, not a Why question.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 3 — I Tried to Fix It
+
+domainlint: architecture as code
+
+---
+layout: centered
+
+# The Idea
+
+### "What if we could enforce good architecture?"
+
+<Notes>
+
+After seeing the same problems in project after project, I built a tool.
+
+</Notes>
+
+---
+layout: centered
+
+# domainlint
+
+<Appear>
+
+Builds a **dependency graph** of your codebase
+
+</Appear>
+
+<Appear>
+
+Runs **rules** against this graph
+
+</Appear>
+
+<Appear>
+
+- No cyclic dependencies
+- Feature-based directories
+- No deep imports — use barrel files
+- No cross-feature cycles
+- No imports from global scope
+
+</Appear>
+
+<Appear>
+
+Supports **custom rules**
+
+</Appear>
+
+<Appear>
+
+### "Architecture as code"
+
+</Appear>
+
+<Notes>
+
+domainlint doesn't just lint files — it understands your architecture as a graph and enforces constraints on it.
+
+</Notes>
+
+---
+layout: centered
+
+# What It Gives You
+
+<Appear>
+
+Clear boundaries
+
+</Appear>
+
+<Appear>
+
+Less chaos
+
+</Appear>
+
+<Appear>
+
+Safer refactoring
+
+</Appear>
+
+<Notes>
+
+When the rules are enforced, teams move faster because they have guardrails.
+
+</Notes>
+
+---
+layout: centered
+
+# But…
+
+### "It works. And it doesn't solve the problem."
+
+<Notes>
+
+Pause here. Let the audience sit with this.
+
+</Notes>
+
+---
+layout: centered
+
+# Why?
+
+It enforces:
+
+<Appear>
+
+✓ Structure
+
+</Appear>
+
+It doesn't fix:
+
+<Appear>
+
+✗ Wrong abstractions
+
+</Appear>
+
+<Appear>
+
+✗ Unclear requirements
+
+</Appear>
+
+<Appear>
+
+✗ Bad decisions
+
+</Appear>
+
+<Notes>
+
+You can have a perfectly structured codebase that builds the wrong thing.
+
+</Notes>
+
+---
+layout: centered
+
+# Punchline
+
+### "You can enforce structure. You can't enforce understanding."
+
+<Notes>
+
+This is the emotional pivot of the talk. Tools help, but they don't replace thinking.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 4 — Enter AI
+
+The new accelerator
+
+---
+layout: centered
+
+# The Hype
+
+<Appear>
+
+"AI will write everything"
+
+</Appear>
+
+<Appear>
+
+"We don't need architecture anymore"
+
+</Appear>
+
+<Notes>
+
+This is what people actually say. Let's examine it.
+
+</Notes>
+
+---
+layout: centered
+
+# Reality
+
+### "AI has no context."
+
+<Appear>
+
+It does what you ask
+
+</Appear>
+
+<Appear>
+
+It doesn't challenge you
+
+</Appear>
+
+<Appear>
+
+It avoids asking questions — unless you tell it to
+
+</Appear>
+
+<Notes>
+
+AI will confront you with your own lack of context. If you don't know what you're building, AI will happily build the wrong thing.
+
+</Notes>
+
+---
+layout: centered
+
+# The Analogy
+
+### "AI is a very fast junior developer."
+
+<Appear>
+
+Executes fast
+
+</Appear>
+
+<Appear>
+
+Scales output
+
+</Appear>
+
+<Appear>
+
+**Scales mistakes**
+
+</Appear>
+
+<Notes>
+
+Like every junior: it tries to do what you asked, fears asking questions, and may confront you with lack of context.
+
+</Notes>
+
+---
+layout: centered
+
+# The Risk
+
+### "We can now generate bad decisions at scale."
+
+<Notes>
+
+If you don't have clear intent, AI amplifies confusion. Speed without direction is just velocity in the wrong direction.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 5 — The Shift
+
+Making rules explicit
+
+---
+layout: centered
+
+# Something Changed
+
+### "We can now make implicit rules explicit."
+
+<Notes>
+
+This is the optimistic turn. The same tools that create chaos can create order — if we use them right.
+
+</Notes>
+
+---
+layout: centered
+
+# Before vs Now
+
+<Appear>
+
+**Before:**
+Rules in people's heads.
+Docs nobody reads.
+
+</Appear>
+
+<Appear>
+
+**Now:**
+Rules in systems.
+Enforceable constraints.
+
+</Appear>
+
+<Notes>
+
+The shift from tribal knowledge to codified knowledge. This is where domainlint and AI meet.
+
+</Notes>
+
+---
+layout: centered
+
+# domainlint (Reframed)
+
+### "Not a lint tool. A constraint system."
+
+<Notes>
+
+Reframe domainlint as part of a bigger idea: architecture as enforceable rules, not documentation.
+
+</Notes>
+
+---
+layout: centered
+
+# The Unlock
+
+### "AI becomes powerful inside constraints."
+
+<Appear>
+
+**Without constraints:** chaos
+
+</Appear>
+
+<Appear>
+
+**With constraints:** alignment, predictability
+
+</Appear>
+
+<Notes>
+
+AI without guardrails is a chaos machine. AI with clear rules and boundaries becomes a multiplier.
+
+</Notes>
+
+---
+layout: centered
+
+# What Becomes Easier
+
+<Appear>
+
+Architecture enforcement
+
+</Appear>
+
+<Appear>
+
+Onboarding
+
+</Appear>
+
+<Appear>
+
+Refactoring at scale
+
+</Appear>
+
+<Appear>
+
+Multi-team consistency
+
+</Appear>
+
+<Notes>
+
+Concrete benefits of the constraint-first approach.
+
+</Notes>
+
+---
+layout: centered
+
+# But…
+
+### "We didn't remove complexity. We made it programmable."
+
+<Notes>
+
+Honest caveat. Complexity doesn't vanish — it moves.
+
+</Notes>
+
+---
+layout: centered
+
+# New Problem
+
+<Appear>
+
+Defining the right rules
+
+</Appear>
+
+<Appear>
+
+Avoiding over-constraint
+
+</Appear>
+
+<Appear>
+
+Knowing what matters
+
+</Appear>
+
+<Notes>
+
+We traded one set of problems for a better set of problems. That's progress.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Part 6 — The Real Bottleneck
+
+---
+layout: centered
+
+# The Truth
+
+### "You don't build slow because of your tools. You build slow because you don't know what you're building."
+
+<Notes>
+
+The core message. Let this land.
+
+</Notes>
+
+---
+layout: centered
+
+# Anti-Patterns
+
+<Appear>
+
+Hype-driven development
+
+</Appear>
+
+<Appear>
+
+Framework-first thinking
+
+</Appear>
+
+<Appear>
+
+Premature abstraction
+
+</Appear>
+
+<Appear>
+
+"Purity" obsession
+
+</Appear>
+
+<Notes>
+
+These are the real killers. Not React. Not NextJS. Not AI.
+
+</Notes>
+
+---
+layout: centered
+
+# The Hierarchy
+
+<Appear>
+
+**1. Decisions**
+
+</Appear>
+
+<Appear>
+
+**2. Constraints**
+
+</Appear>
+
+<Appear>
+
+**3. Tools**
+
+</Appear>
+
+<Appear>
+
+### Most teams invert this.
+
+</Appear>
+
+<Notes>
+
+Tools → Constraints → Decisions is how most teams work. Flip it.
+
+</Notes>
+
+---
+layout: centered
+
+# Mental Model
+
+<Appear>
+
+**Old world:**
+Humans hold context → Tools execute
+
+</Appear>
+
+<Appear>
+
+**New world:**
+Systems hold context → AI executes
+
+</Appear>
+
+<Appear>
+
+**Constant:**
+Humans define intent
+
+</Appear>
+
+<Notes>
+
+The constant across all eras: someone has to decide what to build and why.
+
+</Notes>
+
+---
+layout: mainSection
+
+# Closing
+
+---
+layout: centered
+
+# Final Thought
+
+<Appear>
+
+React won't solve your problems.
+
+</Appear>
+
+<Appear>
+
+NextJS won't solve your problems.
+
+</Appear>
+
+<Appear>
+
+AI won't solve your problems.
+
+</Appear>
+
+<Notes>
+
+Slow reveal. Let each one land.
+
+</Notes>
+
+---
+layout: centered
+
+# The Real Lever
+
+### "Better decisions will."
+
+<Notes>
+
+Simple. Clear. Done.
+
+</Notes>
+
+---
+layout: centered
+
+# One Last Thing
+
+<Appear>
+
+"The fastest teams don't code faster. They decide better."
+
+</Appear>
+
+<Appear>
+
+"We can go faster. But only if we know what 'right direction' means."
+
+</Appear>
+
+<Notes>
+
+Pick the punchline that feels right in the moment. Both work.
+
+</Notes>
