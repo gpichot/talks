@@ -26,13 +26,25 @@ import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
 
 <Appear>
 
+Freelance Consultant
+
+</Appear>
+
+<Appear>
+
+TypeScript, React, Node.js, Python, Infra
+
+</Appear>
+
+<Appear>
+
 **Tech Lead** @Accelerator by Sanofi<br />
 
 </Appear>
 
 <Appear>
 
-**Org** of React Paris Meetups
+**Organizer** of React Paris Meetups
 
 </Appear>
 
@@ -369,13 +381,13 @@ layout: side
 
 **Can we measure it?**
 
-</Appear>
+  </Appear>
 
-<Appear>
+  <Appear>
 
 **Can we enforce it?**
 
-</Appear>
+  </Appear>
 
 <Appear>
 
@@ -651,57 +663,28 @@ layout: side
 
 <Side>
 
-<Appear>
-
 ✅ **Explicit rules**
 
-</Appear>
+❌ **Enforced rules**
 
-<Appear>
-
-❌ **Enforced check**
-
-</Appear>
-
-<Appear>
-
-❓ **Measured check**
-
-</Appear>
-
-<Appear>
+❓ **Impact measurable**
 
 ❓ **Refactoring**
-
-</Appear>
 
 </Side>
 
 ---
 
-layout: centered
+layout: sidedImage
+position: right
 
 ---
 
-### **You can't fix what you don't measure**
+import deadEnd from "./dead-end.png";
 
----
+<Image src={deadEnd} alt="Dead end" style={{ objectFit: "contain" }} />
 
-layout: centered
-
----
-
-## **The Core Insight** 💡
-
----
-
-layout: centered
-
----
-
-### Your **directory structure** is just organization
-
-### Your **import graph** is your _real_ architecture
+### **ESLint: A Dead End** 🚫
 
 ---
 
@@ -712,18 +695,6 @@ layout: side
 ## **What if we could...**
 
 <Side>
-
-<Appear>
-
-✅ Analyze the **entire import graph** automatically
-
-</Appear>
-
-<Appear>
-
-✅ Detect violations in **< 1 second** for 1000+ files
-
-</Appear>
 
 <Appear>
 
@@ -739,43 +710,13 @@ layout: side
 
 <Appear>
 
+✅ Detect all violations
+
+</Appear>
+
+<Appear>
+
 ✅ Work with **TypeScript natively**
-
-</Appear>
-
-</Side>
-
----
-
-layout: side
-
----
-
-## **Progress Check**
-
-<Side>
-
-<Appear>
-
-✅ **Explicit rules**
-
-</Appear>
-
-<Appear>
-
-✅ **Enforced check**
-
-</Appear>
-
-<Appear>
-
-✅ **Measured check**
-
-</Appear>
-
-<Appear>
-
-❓ **Automated refactoring** (better)
 
 </Appear>
 
@@ -832,7 +773,31 @@ layout: centered
 
 ---
 
-### **Live Demo: The Tool in Action**
+import domainlintViolations from "./domainlint-violations.png";
+
+<Image
+  src={domainlintViolations}
+  alt="DomainLint violations report"
+  style={{ objectFit: "contain", maxHeight: "50vh" }}
+/>
+
+## Enforcable ✅
+
+---
+
+layout: centered
+
+---
+
+import domainlintFeaturesSummary from "./domainlint-feature-summary.png";
+
+<Image
+  src={domainlintFeaturesSummary}
+  alt="DomainLint features summary"
+  style={{ objectFit: "contain", maxHeight: "50vh" }}
+/>
+
+## Measurable ✅
 
 ---
 
@@ -845,7 +810,12 @@ import mindblown from "./mindblown.png";
 
 <Image src={mindblown} alt="Mind blown" style={{ objectFit: "contain" }} />
 
-### **1000 files analyzed in < 1s** ⚡
+### **How fast?**
+
+```bash
+$ domainlint lint
+Analyzed 1110 files in 953ms
+```
 
 ---
 
@@ -854,38 +824,15 @@ position: right
 
 ---
 
-import graphViz from "./graph-visualization.png";
+import graphViz from "./domainlint-graph.png";
 
 <Image
   src={graphViz}
   alt="Graph visualization"
-  style={{ objectFit: "contain" }}
+  style={{ objectFit: "contain", maxWidth: "50vw" }}
 />
 
-### **Visualize the Chaos**
-
-Cycles in red • Deep imports exposed
-
----
-
-layout: centered
-
----
-
-## **Beyond Linting**
-
----
-
-layout: sidedImage
-position: right
-
----
-
-import galaxyBrain from "./galaxy-brain.jpg";
-
-<Image src={galaxyBrain} alt="Galaxy brain" style={{ objectFit: "contain" }} />
-
-### Not just about catching violations
+### **Visualization too**
 
 ---
 
@@ -893,27 +840,17 @@ layout: side
 
 ---
 
-## **Architecture Visibility**
+## **Progress Check**
 
 <Side>
 
-<Appear>
+✅ **Explicit rules**
 
-Generate **visual graphs**
+✅ **Enforced rules**
 
-</Appear>
+✅ **Impact measurable**
 
-<Appear>
-
-See **coupling metrics**
-
-</Appear>
-
-<Appear>
-
-Track **improvement over time**
-
-</Appear>
+❓ **Refactoring**
 
 </Side>
 
@@ -931,13 +868,19 @@ layout: side
 
 ---
 
-## **Claude Code Integration**
+## **A fast feedback loop**
+
+<Appear>
+
+(Test phase for now)
+
+</Appear>
 
 <Side>
 
 <Appear>
 
-The import graph provides **context** for refactoring
+`domainlint` provides **context** for refactoring
 
 </Appear>
 
@@ -971,64 +914,13 @@ AI can understand:
 
 </Appear>
 
-</Side>
-
----
-
-layout: sidedCode
-
----
-
-### **Example: AI-Guided Migration**
-
-```bash
-# Run linter to find violations
-$ domainlint
-
-❌ features/auth/LoginForm.tsx
-  → Deep import from features/user-profile/components/Avatar
-
-❌ Cyclic dependency detected:
-  features/auth → features/profile → features/auth
-```
-
-<Side>
-
 <Appear>
 
-**Then ask Claude Code:**
-
-</Appear>
-
-<Appear>
-
-"Fix these import violations while maintaining functionality"
-
-</Appear>
-
-<Appear>
-
-Claude understands the **architectural constraints**
-
-</Appear>
-
-<Appear>
-
-And refactors within the **boundaries**
+And quickly ⚡
 
 </Appear>
 
 </Side>
-
----
-
-layout: centered
-
----
-
-### **Computed data = better AI prompts**
-
-### **Makes AI 10x more effective** at large refactorings
 
 ---
 
@@ -1040,29 +932,13 @@ layout: side
 
 <Side>
 
-<Appear>
-
 ✅ **Explicit rules**
 
-</Appear>
+✅ **Enforced rules**
 
-<Appear>
+✅ **Impact measurable**
 
-✅ **Enforced check**
-
-</Appear>
-
-<Appear>
-
-✅ **Measured check**
-
-</Appear>
-
-<Appear>
-
-✅ **Automated refactoring** (better)
-
-</Appear>
+✅ **Refactoring**
 
 </Side>
 
@@ -1102,7 +978,7 @@ Want to extract features into packages?
 
 <Appear>
 
-The import graph **proves** your features are ready
+`domainlint` **proves** your features are ready
 
 </Appear>
 
@@ -1146,61 +1022,82 @@ layout: side
 
 ---
 
-layout: centered
-
----
-
-### **Your import graph doesn't lie** 🔍
-
-### It shows what your architecture **really** is
-
----
-
 layout: side
 
 ---
 
-## **Key Takeaways**
+### **LSP Plugins** in Claude Code
 
 <Side>
 
 <Appear>
 
-📁 Directory structure ≠ Architecture
+🔮 **typescript-lsp plugin**
 
 </Appear>
 
 <Appear>
 
-🔗 Import graph = Real architecture
-
-</Appear>
-
-<Appear>
-
-⚖️ ESLint can't scale for architecture rules
-
-</Appear>
-
-<Appear>
-
-⚡ Fast graph analysis makes enforcement possible
-
-</Appear>
-
-<Appear>
-
-🤖 AI + Import graph = Powerful refactoring
-
-</Appear>
-
-<Appear>
-
-🎯 Start simple: **3 rules** prevent chaos
+- `renameFile` with auto-import updates: _not yet supported_
 
 </Appear>
 
 </Side>
+
+---
+
+layout: centered
+
+---
+
+## **Key Takeaways**
+
+---
+
+layout: centered
+
+---
+
+### Your **directory structure** is just organization
+
+<Appear>
+
+### Your **import graph** is your _real_ architecture
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### You can't **fix** what you don't **observe**
+
+<Appear>
+
+### You can't **improve** what you can't **measure**
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **Computing information** is expensive for AI
+
+<Appear>
+
+### **Build tools** that compute **deterministically**
+
+</Appear>
+<Appear>
+
+### Feed the **results** as input to **AI**
+
+</Appear>
 
 ---
 
