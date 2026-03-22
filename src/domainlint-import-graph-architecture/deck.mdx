@@ -1,0 +1,1112 @@
+---
+title: "Your import graph is your real architecture"
+---
+
+layout: mainSection
+
+---
+
+import { Notes, Appear, Doc, Text } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn } from "@gpichot/spectacle-deck";
+
+# <small>**Your import graph is your real architecture**</small>
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+👋 I am **Gabriel Pichot**, and I am:
+
+<Appear>
+
+Freelance Consultant
+
+</Appear>
+
+<Appear>
+
+TypeScript, React, Node.js, Python, Infra
+
+</Appear>
+
+<Appear>
+
+**Tech Lead** @Accelerator by Sanofi<br />
+
+</Appear>
+
+<Appear>
+
+**Organizer** of React Paris Meetups
+
+</Appear>
+
+<Appear>
+
+[LinkedIn](https://www.linkedin.com/in/gabrielpichot/)
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### The Tale of Every Growing Codebase 📚
+
+---
+
+layout: side
+
+---
+
+## **The Typical Beginning**
+
+<Side>
+
+<Appear>
+
+**Day 1**: New project, clean slate
+
+</Appear>
+
+<Appear>
+
+```
+src/
+  components/
+  hooks/
+  api/
+  utils/
+```
+
+</Appear>
+
+<Appear>
+
+"This will be different!" 😊
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import sixMonthsBlank from "./six-months-later-blank.jpg";
+
+<Image
+  src={sixMonthsBlank}
+  alt="6 months later"
+  style={{ objectFit: "contain", maxHeight: "60vh" }}
+/>
+
+### &nbsp;
+
+---
+
+layout: side
+
+---
+
+## **The Reality**
+
+<Side>
+
+<Appear>
+
+```
+src/
+  components/     ← 347 files
+  hooks/          ← 89 files
+  api/            ← 156 files
+  utils/          ← 203 files
+```
+
+</Appear>
+
+<Appear>
+
+Onboarding sounds like:
+
+</Appear>
+
+<Appear>
+
+"All components are here... yes, there are a thousand of them"
+
+</Appear>
+
+<Appear>
+
+"The payment feature lives... _everywhere_" 😰
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **THE GREAT REFACTORING** ✨
+
+---
+
+layout: side
+
+---
+
+## **Feature-Based Directories!**
+
+<Side>
+
+<Appear>
+
+The team decides to reorganize:
+
+</Appear>
+
+<Appear>
+
+```
+src/
+  features/
+    authentication/
+    user-profile/
+    dashboard/
+    payments/
+```
+
+</Appear>
+
+<Appear>
+
+Clear boundaries! Better organization!
+
+</Appear>
+
+<Appear>
+
+Onboarding becomes easier! 🎉
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import sixMonthsAgain from "./six-months-later-blank.jpg";
+
+<Image
+  src={sixMonthsAgain}
+  alt="6 months later again"
+  style={{ objectFit: "contain", maxHeight: "40vh" }}
+/>
+
+### &nbsp;
+
+---
+
+layout: sidedImage
+position: right
+
+---
+
+import spaghetti from "./spaghetti-architecture-graph.png";
+
+<Image
+  src={spaghetti}
+  alt="Spaghetti architecture"
+  style={{ objectFit: "contain" }}
+/>
+
+### **The actual architecture**
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import bikeFall from "./bike-fall.jpg";
+
+<Image src={bikeFall} alt="Bike fall meme" style={{ objectFit: "contain" }} />
+
+### "Damn developers, they don't respect architecture!"
+
+---
+
+layout: side
+
+---
+
+## **The Hidden Problem**
+
+<Side>
+
+<Appear>
+
+Every feature imports from every other feature
+
+</Appear>
+
+<Appear>
+
+```tsx
+// features/authentication/LoginForm.tsx
+import { UserAvatar } from "@/features/user-profile/components";
+import { trackEvent } from "@/features/dashboard/analytics";
+```
+
+</Appear>
+
+<Appear>
+
+```tsx
+// features/user-profile/ProfilePage.tsx
+import { logout } from "@/features/authentication/utils";
+import { PaymentStatus } from "@/features/payments/types";
+```
+
+</Appear>
+
+<Appear>
+
+**Coupling is everywhere** 🕸️
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **Most developers:** "That's fine, we don't care" 🤷
+
+<Appear>
+
+"It works, doesn't it?"
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **One developer:** "This is going to get uglier..."
+
+<Appear>
+
+"In 6 months this will be unmaintainable"
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **What went wrong?**
+
+---
+
+layout: centered
+
+---
+
+### It's not that developers aren't **disciplined**
+
+---
+
+layout: centered
+
+---
+
+### It's that rules aren't **enforced automatically**
+
+<Appear>
+
+Implicit rules, even if documented, won't be followed
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+## **So we need to ask:**
+
+<Side>
+
+<Appear>
+
+**Which rules?**
+
+</Appear>
+
+<Appear>
+
+**How much are we impacted?**
+
+</Appear>
+
+<Appear>
+
+**Can we measure it?**
+
+  </Appear>
+
+  <Appear>
+
+**Can we enforce it?**
+
+  </Appear>
+
+<Appear>
+
+Which features are **worst**?
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **The Rules...**
+
+<Side>
+
+<Appear>
+
+📋 Use barrel files (`index.ts`) to expose feature APIs
+
+</Appear>
+
+<Appear>
+
+📋 Use barrel files to import from other feature
+
+</Appear>
+
+<Appear>
+
+📋 No cyclic dependencies between features
+
+</Appear>
+
+<Appear>
+
+📋 Features should only import from other features
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Rule 1 & 2: Expose APIs via Barrel Files**
+
+Use `index.ts` to expose feature APIs
+
+```tsx
+// features/ui/index.ts
+export { Button } from "./components/Button";
+export { Input } from "./components/Input";
+
+// ❌ BAD - Importing internal files
+import { Button } from "@/features/ui/components/Button";
+
+// ✅ GOOD - Importing from barrel
+import { Button } from "@/features/ui";
+```
+
+<Side>
+
+<Appear>
+
+**Why?**
+
+</Appear>
+
+<Appear>
+
+- Enforces public API boundaries
+
+</Appear>
+
+<Appear>
+
+- Clear contracts between features
+
+</Appear>
+
+<Appear>
+
+- Easier to move to packages later
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Rule 3: No Cyclic Dependencies**
+
+Features shouldn't depend on each other cyclically
+
+```tsx
+// ❌ BAD - Cycle detected
+// features/auth/index.ts
+import { UserProfile } from "@/features/user-profile";
+
+// features/user-profile/index.ts
+import { logout } from "@/features/auth";
+```
+
+<Side>
+
+<Appear>
+
+**Why?**
+
+</Appear>
+
+<Appear>
+
+- Makes code impossible to understand
+
+</Appear>
+
+<Appear>
+
+- Blocks incremental refactoring
+
+</Appear>
+
+<Appear>
+
+- Prevents module extraction
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Rule 4: Features Isolation**
+
+Features should only import from other features (not internals)
+
+```tsx
+// ❌ BAD - Direct internal import
+import { getUserData } from "@/lib/api";
+
+// ✅ GOOD - Import from feature API
+import { getUserData } from "@/features/user-profile";
+
+// ✅ BETTER - Share via common
+import { getUserData } from "@/features/common";
+```
+
+<Side>
+
+<Appear>
+
+**Why?**
+
+</Appear>
+
+<Appear>
+
+- Enables independent deployment
+
+</Appear>
+
+<Appear>
+
+- Reduces blast radius of changes
+
+</Appear>
+
+<Appear>
+
+- Clarifies dependencies
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Progress Check**
+
+<Side>
+
+✅ **Explicit rules**
+
+❓ **Enforced rules**
+
+❓ **Impact measurable**
+
+❓ **Refactoring**
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **ESLint to the rescue?** 🤔
+
+---
+
+layout: sidedCode
+
+---
+
+### **The ESLint Attempt**
+
+```js
+// .eslintrc.js - Example with import/no-restricted-paths
+{
+  "rules": {
+    "import/no-restricted-paths": [
+      "error",
+      {
+        "zones": [
+          {
+            "target": "./src/features/authentication",
+            "from": "./src/features/user-profile"
+          },
+          {
+            "target": "./src/features/authentication",
+            "from": "./src/features/dashboard"
+          },
+          // ... repeat for every feature combination
+          // ... 50 features = many combinations
+        ]
+      }
+    ]
+  }
+}
+```
+
+<Side>
+
+[no-restricted-paths](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-restricted-paths.md)
+
+<Appear>
+
+Biome? Same fun with
+[no-restricted-imports](https://biomejs.dev/linter/rules/no-restricted-imports/#_top)
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Progress Check**
+
+<Side>
+
+✅ **Explicit rules**
+
+❌ **Enforced rules**
+
+❓ **Impact measurable**
+
+❓ **Refactoring**
+
+</Side>
+
+---
+
+layout: sidedImage
+position: right
+
+---
+
+import deadEnd from "./dead-end.png";
+
+<Image src={deadEnd} alt="Dead end" style={{ objectFit: "contain" }} />
+
+### **ESLint: A Dead End** 🚫
+
+---
+
+layout: side
+
+---
+
+## **What if we could...**
+
+<Side>
+
+<Appear>
+
+✅ Enforce rules **without manual configuration**
+
+</Appear>
+
+<Appear>
+
+✅ Catch **cyclic dependencies** instantly
+
+</Appear>
+
+<Appear>
+
+✅ Detect all violations
+
+</Appear>
+
+<Appear>
+
+✅ Work with **TypeScript natively**
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **The Import Graph Approach**
+
+---
+
+layout: sidedImage
+position: right
+
+---
+
+import graphDiagram from "./import-graph-diagram.png";
+
+<Image src={graphDiagram} style={{ objectFit: "contain" }} />
+
+### **How It Works**
+
+<Appear>
+
+**Step 1**: Parse all files using **SWC** (Rust-powered)
+
+</Appear>
+
+<Appear>
+
+**Step 2**: Build complete import graph
+
+</Appear>
+
+<Appear>
+
+**Step 3**: Apply architectural rules
+
+</Appear>
+
+<Appear>
+
+**Step 4**: Report violations
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+import domainlintViolations from "./domainlint-violations.png";
+
+<Image
+  src={domainlintViolations}
+  alt="DomainLint violations report"
+  style={{ objectFit: "contain", maxHeight: "50vh" }}
+/>
+
+## Enforcable ✅
+
+---
+
+layout: centered
+
+---
+
+import domainlintFeaturesSummary from "./domainlint-feature-summary.png";
+
+<Image
+  src={domainlintFeaturesSummary}
+  alt="DomainLint features summary"
+  style={{ objectFit: "contain", maxHeight: "50vh" }}
+/>
+
+## Measurable ✅
+
+---
+
+layout: sidedImage
+position: right
+
+---
+
+import mindblown from "./mindblown.png";
+
+<Image src={mindblown} alt="Mind blown" style={{ objectFit: "contain" }} />
+
+### **How fast?**
+
+```bash
+$ domainlint lint
+Analyzed 1110 files in 953ms
+```
+
+---
+
+layout: sidedImage
+position: right
+
+---
+
+import graphViz from "./domainlint-graph.png";
+
+<Image
+  src={graphViz}
+  alt="Graph visualization"
+  style={{ objectFit: "contain", maxWidth: "50vw" }}
+/>
+
+### **Visualization too**
+
+---
+
+layout: side
+
+---
+
+## **Progress Check**
+
+<Side>
+
+✅ **Explicit rules**
+
+✅ **Enforced rules**
+
+✅ **Impact measurable**
+
+❓ **Refactoring**
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### **AI-Assisted Migration** 🤖
+
+---
+
+layout: side
+
+---
+
+## **A fast feedback loop**
+
+<Appear>
+
+(Test phase for now)
+
+</Appear>
+
+<Side>
+
+<Appear>
+
+`domainlint` provides **context** for refactoring
+
+</Appear>
+
+<Appear>
+
+AI can understand:
+
+</Appear>
+
+<Appear>
+
+- Which files depend on what
+
+</Appear>
+
+<Appear>
+
+- What can be safely changed
+
+</Appear>
+
+<Appear>
+
+- Where cycles exist
+
+</Appear>
+
+<Appear>
+
+- What the boundaries are
+
+</Appear>
+
+<Appear>
+
+And quickly ⚡
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Progress Check**
+
+<Side>
+
+✅ **Explicit rules**
+
+✅ **Enforced rules**
+
+✅ **Impact measurable**
+
+✅ **Refactoring**
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Stepping Stone to Monorepo**
+
+<Side>
+
+<Appear>
+
+Want to extract features into packages?
+
+</Appear>
+
+<Appear>
+
+**Step 1**: Enforce import rules first
+
+</Appear>
+
+<Appear>
+
+**Step 2**: Fix all violations
+
+</Appear>
+
+<Appear>
+
+**Step 3**: Extract to packages
+
+</Appear>
+
+<Appear>
+
+`domainlint` **proves** your features are ready
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Results**
+
+<Side>
+
+<Appear>
+
+✅ Clear **ownership**
+
+</Appear>
+
+<Appear>
+
+✅ Easier **refactoring**
+
+</Appear>
+
+<Appear>
+
+✅ Better **onboarding**
+
+</Appear>
+
+<Appear>
+
+✅ Enforced **boundaries** that actually last
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+### **LSP Plugins** in Claude Code
+
+<Side>
+
+<Appear>
+
+🔮 **typescript-lsp plugin**
+
+</Appear>
+
+<Appear>
+
+- `renameFile` with auto-import updates: _not yet supported_
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **Key Takeaways**
+
+---
+
+layout: centered
+
+---
+
+### Your **directory structure** is just organization
+
+<Appear>
+
+### Your **import graph** is your _real_ architecture
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### You can't **fix** what you don't **observe**
+
+<Appear>
+
+### You can't **improve** what you can't **measure**
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **Computing information** is expensive for AI
+
+<Appear>
+
+### **Build tools** that compute **deterministically**
+
+</Appear>
+<Appear>
+
+### Feed the **results** as input to **AI**
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+# Thank you!
+
+:qrcode[https://tally.so/r/w4xxVY?Talk=IMPORT_GRAPH_ARCHITECTURE]
+
+### Questions?

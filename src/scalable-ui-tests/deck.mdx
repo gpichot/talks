@@ -1,0 +1,667 @@
+---
+title: "Building Maintainable UI Tests"
+---
+
+layout: mainSection
+
+---
+
+import { Notes, Appear, Doc, Text } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn } from "@gpichot/spectacle-deck";
+
+# **Writing UI Tests that scales**
+
+## A Small Guide to Maintainable UI Tests
+
+---
+
+layout: centered
+
+---
+
+### Why do developers dislike UI tests? 🤔
+
+---
+
+layout: side
+
+---
+
+## **Reasons developers avoid UI tests**
+
+<Side>
+
+<Appear>
+
+- Flaky tests that randomly fail
+
+</Appear>
+
+<Appear>
+
+- Difficult to maintain when UI changes
+
+</Appear>
+
+<Appear>
+
+- Verbose and hard to read
+
+</Appear>
+
+<Appear>
+
+- Slow to run compared to unit tests/non visual tests
+
+</Appear>
+
+<Appear>
+
+- Hard to debug when they fail
+
+</Appear>
+
+<Appear>
+
+- Steep learning curve for testing libraries
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Objectives**
+
+<Side>
+
+Propose a methodology to write UI tests that are:
+
+- maintainable
+
+- more readable
+
+- easily reproducible by AI
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **How a typical React test looks**
+
+```jsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import SurveyQuestion from "./SurveyQuestion";
+
+describe("RatingSection", () => {
+  it("allows user to select a rating", async () => {
+    const mockQuestion = /*... */;
+    const onSave = jest.fn();
+
+    render(<SurveyQuestion question={mockQuestion} onSave={onSave} />);
+
+    expect(screen.getByText("How was your experience?")).toBeVisible();
+    expect(screen.getByText("Please rate from 1-5")).toBeVisible();
+
+    const excellentButton = screen.getByRole("button", { name: "Excellent" });
+
+    await userEvent.click(excellentButton);
+
+    expect(onSave).toHaveBeenCalledWith(5);
+  });
+});
+```
+
+**What's wrong with this approach?**
+
+<Side>
+
+<Appear>
+
+- Implementation details leaked into test
+
+</Appear>
+
+<Appear>
+
+- Low-level query and interaction code repeated
+
+</Appear>
+
+<Appear>
+
+- Test becomes brittle when UI changes
+
+</Appear>
+
+<Appear>
+
+- Hard to understand at a glance what's being tested
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **What we would like?**
+
+```tsx
+// @step showLines(3) highlight(3) name("Render component")
+// @step showLines(4-6) highlight(5-6) name("Check elements visibility")
+// @step showLines(7-8) highlight(8) name("Select rating")
+// @step showLines(9-10) highlight(10) name("Check onSave called with rating")
+describe("RatingSection", () => {
+  it("allows user to select a rating", () => {
+    const { user, elements } = renderComponent();
+
+    expect(elements.title()).toBeVisible();
+    expect(elements.subtext()).toBeVisible();
+
+    await user.selectRating("Excellent");
+
+    expect(props.onSave).toHaveBeenCalledWith(4);
+  });
+});
+```
+
+---
+
+layout: centered
+
+---
+
+import pom from "./pom.gif";
+
+<Image src={pom} alt="POM to the rescue!" />
+
+# &nbsp;
+
+---
+
+layout: side
+
+---
+
+## **POM = Page Object Model**
+
+Page Objects in Nightwatch.js
+
+<Side>
+
+Decouple test code from UI details
+
+Reusability
+
+Abstract Complex UI Interactions
+
+Resilient to UI changes
+
+</Side>
+
+<Doc link="https://playwright.dev/docs/pom" label="Playwright POM" />
+
+---
+
+layout: side
+
+---
+
+### **The Three Components of POM**
+
+<Side>
+
+1. **Widget Objects**: Abstract UI elements and interactions
+2. **Test Setup**: Component rendering with default props
+3. **Test Cases**: Readable, focused on business scenarios
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **1. Widget Objects**
+
+<Side>
+
+<Appear>
+
+- Encapsulate DOM queries and selectors
+
+</Appear>
+
+<Appear>
+
+- Provide methods for user interactions
+
+</Appear>
+
+<Appear>
+
+- Abstract away implementation details
+
+</Appear>
+
+<Appear>
+
+- Create a domain-specific language for tests
+
+</Appear>
+
+<Appear>
+
+- Single point for updates when UI changes
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Widget Object Example**
+
+<Appear>
+
+Kent will not be happy with this example 😅 (we are not using `screen`).
+
+</Appear>
+
+```tsx
+// @step highlight(1-11) name("Widget Object")
+// @step showLines(13-22) highlight(13-22) name("Elements")
+// @step showLines(23-31) highlight(23-31) name("Actions")
+export function RatingSectionWidgetObject({
+  wrapper,
+  user,
+  content,
+}: {
+  wrapper?: HTMLElement;
+  user: UserEvent;
+  content: RatingSectionContent;
+}) {
+  const element = wrapper ?? window.document.body;
+
+  return {
+    elements: {
+      title: () => getByText(element, content.text),
+      subtext: () => getByText(element, content.subtext),
+      ratingOption: (value: number) => {
+        return screen.getByRole("button", {
+          name: content.options.find((o) => o.value === value)
+            ?.label,
+        }),
+      }
+    },
+    actions: {
+      selectRating: async (value: number) => {
+        const option = screen.getByRole("button", {
+          name: content.options.find((o) => o.value === value)
+            ?.label,
+        });
+        await user.click(option);
+      },
+    },
+  };
+}
+```
+
+---
+
+layout: side
+
+---
+
+## **2. Test Setup**
+
+<Side>
+
+<Appear>
+
+- Creates a consistent render function
+
+</Appear>
+
+<Appear>
+
+- Sets up default props and mocks
+
+</Appear>
+
+<Appear>
+
+- Integrates widget objects
+
+</Appear>
+
+<Appear>
+
+- Creates a clean testing environment
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Test Setup Example**
+
+```tsx
+// @step highlight(2) name("Overridable Props")
+// @step showLines(4-14) highlight(4-14) name("Default Props")
+// @step showLines(15-16) highlight(16) name("Render Component")
+// @step showLines(17-27) highlight(18-27) name("Return component with widget object")
+function renderComponent(
+  props: Partial<Parameters<typeof RatingSection>[0]> = {},
+) {
+  const user = userEvent.setup();
+  const onSave = vi.fn();
+  const onDismiss = vi.fn();
+
+  const defaultProps = {
+    section: mockSection,
+    currentStep: 1,
+    totalSteps: 5,
+    onSave,
+    onDismiss,
+  };
+
+  const rendered = render(<RatingSection {...defaultProps} {...props} />);
+
+  return {
+    ...rendered,
+    user,
+    props: { ...defaultProps, ...props },
+    ...RatingSectionWidgetObject({
+      user,
+      wrapper: rendered.container,
+      content: mockSection.content,
+    }),
+  };
+}
+```
+
+---
+
+layout: side
+
+---
+
+## **3. Test Cases**
+
+<Side>
+
+<Appear>
+
+- Focus on business scenarios
+
+</Appear>
+
+<Appear>
+
+- Use high-level abstraction from widget objects
+
+</Appear>
+
+<Appear>
+
+- Read like user stories or acceptance criteria
+
+</Appear>
+
+<Appear>
+
+- Hide implementation details
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Test Cases Example**
+
+```tsx
+describe("RatingSection", () => {
+  it("renders rating question with all options", () => {
+    const { elements } = renderComponent();
+
+    expect(elements.title()).toBeVisible();
+    expect(elements.subtext()).toBeVisible();
+
+    for (const option of mockSection.content.options) {
+      expect(elements.ratingOption(option.value)).toBeVisible();
+    }
+  });
+
+  it("calls onSave with selected rating value", async () => {
+    const { actions, props } = renderComponent();
+
+    await actions.selectRating(4);
+
+    expect(props.onSave).toHaveBeenCalledWith(4);
+  });
+
+  it("returns null if question type is not RATING", () => {
+    const { container } = renderComponent({
+      section: survey.sections[0],
+    });
+
+    expect(container).toBeEmptyDOMElement();
+  });
+});
+```
+
+---
+
+layout: sidedCode
+
+---
+
+### **Bonus 1: Widget Objects are composable**
+
+```tsx
+function renderSurvey() {
+  const user = userEvent.setup();
+
+  const rendered = render(<NpsSurvey />);
+
+  return {
+    ...rendered,
+    user,
+    wait: {
+      forSurveyToBeVisible: async () => {
+        await waitFor(() => {
+          expect(rendered.getByLabelText("NPS Survey")).toBeVisible();
+        });
+      },
+    },
+    actions: {
+      openSurvey: () => user.click(rendered.getByText("Open Survey")),
+    },
+    widgets: {
+      opening: OpeningSectionWidgetObject({
+        user,
+        wrapper: rendered.container,
+      }),
+      rating: RatingSectionWidgetObject({ user, wrapper: rendered.container }),
+      choice: ChoiceSectionWidgetObject({
+        user,
+        wrapper: rendered.container,
+      }),
+      text: TextSectionWidgetObject({ user, wrapper: rendered.container }),
+    },
+  };
+}
+```
+
+---
+
+layout: sidedCode
+
+---
+
+### **Bonus 1: Example**
+
+```tsx
+describe("Survey Flow", () => {
+  it("completes full survey flow with positive feedback", async () => {
+    const { widgets, actions, wait } = renderSurvey();
+
+    await actions.openSurvey();
+    await wait.forSurveyToBeVisible();
+
+    // Step 1: Opening question
+    await widgets.opening.actions.clickPrimary();
+
+    // Step 2: Rating question
+    await screen.findByText(
+      "How do you describe your experience with this tool?",
+    );
+    await widgets.rating.actions.selectRating(5);
+
+    // Step 3: Multiple choice
+    await screen.findByText(
+      "We're glad to hear that! What do you like most about the app?",
+    );
+    await widgets.multipleChoice.actions.selectOption("Usability");
+    await widgets.multipleChoice.actions.enterFreeText(
+      "Great user experience!",
+    );
+    await widgets.multipleChoice.actions.clickSave();
+
+    // ...
+  });
+});
+```
+
+---
+
+layout: side
+
+---
+
+## **Benefits of POM Approach**
+
+<Side>
+
+<Appear>
+
+- **Maintainability**: Changes to UI require updates in one place
+
+</Appear>
+
+<Appear>
+
+- **Readability**: Tests focus on business scenarios, not DOM details
+
+</Appear>
+
+<Appear>
+
+- **Reusability**: Widget objects can be used across multiple tests
+
+</Appear>
+
+<Appear>
+
+- **Scalability**: Complex flows become manageable
+
+</Appear>
+
+<Appear>
+
+- **Resilience**: Less brittle tests that don't break with minor UI changes
+
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Bonus 2: How AI Can Help**
+
+<Side>
+
+<Appear>
+
+- Analyze component code to understand structure
+
+</Appear>
+
+<Appear>
+
+- Generate appropriate widget objects based on component props and DOM
+
+</Appear>
+
+<Appear>
+
+- Create test setup with sensible defaults
+
+</Appear>
+
+<Appear>
+
+- Generate test cases covering key scenarios
+
+</Appear>
+
+<Appear>
+
+- Reduce manual test writing by 50-80% (if no more)
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+## **Demo**
+
+---
+
+layout: centered
+
+---
+
+# Thank you!
+
+:qrcode[https://tally.so/r/w4xxVY?Talk=POM_UI_TESTS]
+
+### Questions?
