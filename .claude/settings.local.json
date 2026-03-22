@@ -14,7 +14,14 @@
       "Skill(gemini-image)",
       "Bash(node:*)",
       "Bash(./generate.sh:*)",
-      "Bash(./generate-meme.sh:*)"
+      "Bash(./generate-meme.sh:*)",
+      "Bash(bash .claude/skills/meme/get-memes.sh 2>/dev/null | python3 -c \"\nimport json, sys\ndata = json.load\\(sys.stdin\\)\nmemes = data['data']['memes'][:50]\nfor m in memes:\n    print\\(f\\\\\"{m['id']}: {m['name']} \\(boxes: {m['box_count']}\\)\\\\\"\\)\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 181913649 --text0 \"How → What → Why\" --text1 \"Why → What → How\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 55311130 --text0 \"Frameworks, patterns, architecture debates everywhere\" --text1 \"This is fine\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 129242436 --text0 \"React is just a rendering library\" --text1 \"\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 79132341 --text0 \"Let's use React for everything!\" --text1 \"Never asking 'why?'\" --text2 \"Problems we didn't have before\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 195515965 --text0 \"Add React\" --text1 \"Add Redux\" --text2 \"Add NextJS\" --text3 \"Why is our app so complex?\" 2>/dev/null)",
+      "Bash(bash .claude/skills/meme/generate-meme.sh --template-id 93895088 --text0 \"Using jQuery\" --text1 \"Using React\" --text2 \"Understanding the problem first\" --text3 \"Making the implicit explicit\" 2>/dev/null)"
     ]
   }
 }

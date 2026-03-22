@@ -2,36 +2,103 @@
 author: Gabriel Pichot
 title: "React Won't Solve Your Problems"
 summary: >
-  React keeps evolving, yet our projects keep failing in familiar ways.
-  Even with AI helping us move faster than ever, we often end up in the same places.
-  This talk wonders why some patterns never change, no matter how modern our stack becomes.
-tags: ["react", "architecture", "cognitive-load", "ai", "domainlint"]
+  React made building UIs simpler, but the problems we face today aren't about rendering.
+  Through practical examples — testing utilities, domainlint, TanStack Query — this talk
+  explores how reducing extraneous cognitive load is the real lever for building software that lasts.
+tags: ["react", "architecture", "cognitive-load", "domainlint", "testing", "dx"]
 outline: >
-  - Personal story
-  - What problem does React solve?
-  - Why → What → How
-  - Cognitive load and the real problem
-  - domainlint: making the implicit explicit
-  - AI and information
-  - The real bottleneck
+  - Hook: domainlint demo on a real project
+  - Personal story (confession, not lecture)
+  - ContactForm: the over-engineered form
+  - "I did everything by the book"
+  - Cognitive load: why we over-engineer (discovery, not lesson)
+  - Redux → TanStack Query (let the code speak)
+  - Testing utilities
+  - "I asked Claude" (the turning point)
+  - domainlint
+  - Takeaways + concrete action
 ---
 
 layout: centered
 
 ---
 
-import { Appear, Text } from "spectacle";
+import { Appear } from "@gpichot/spectacle-deck";
 import { Image, Side, ItemsColumn, Notes, Doc } from "@gpichot/spectacle-deck";
+import { FilePane } from "@gpichot/spectacle-deck";
+
+<Appear>
+
+<FilePane name="Feature based directories" minWidth="60vw">
+
+```
+src/
+  features/
+    authentication/
+      index.ts        # Public API (barrel file)
+      login.ts        # Internal
+      session.ts
+    user-profile/
+      index.ts        # Public API
+      avatar.ts
+    dashboard/
+    payments/
+```
+
+</FilePane>
+
+</Appear>
+
+<Notes>
+
+> Who's using feature-based folder structures?
+
+[Demo: run `domainlint check` on a real project]
+
+</Notes>
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+**Gabriel Pichot**
+
+<Appear>
+
+Engineering Manager @Sanofi
+
+</Appear>
+
+<Appear>
+
+Organizer of React Paris Meetups
+
+</Appear>
+
+<Appear>
+
+TypeScript, React, Node.js, Python, Infra
+
+</Appear>
+
+---
+
+layout: centered
+
+---
 
 ### **React won't solve your problems**
 
 <Notes>
 
 That's what I would tell myself 10 years ago.
-
-React Paris — Gabriel Pichot
-
-Not in a bad way.
 
 </Notes>
 
@@ -41,17 +108,15 @@ layout: side
 
 ---
 
-import happyKid from "./happy-kid.png";
+import happyKid from "../react-will-not-solve-your-problems/happy-kid.png";
 
-## **The Story**
+## **10 years ago**
 
 <Appear priority={1}>
 
-No templates.
+No templates. No controllers. Just JavaScript.
 
-No controllers.
-
-Just JavaScript.
+I was blown away. It felt **simple**.
 
 </Appear>
 
@@ -63,159 +128,28 @@ Just JavaScript.
 
 </Side>
 
-<Notes>
-
-I had graduated one year ago. Worked for a year with AngularJS.
-
-Then I joined a startup. We had one feature where we needed something dynamic
-on the frontend and I decided to try React. (Don't do that).
-
-And I was **blown away**.
-
-It felt... **simple**. I fell in love with it.
-
-</Notes>
-
 ---
 
 layout: side
 
 ---
 
-## **What Happened Next**
+## **Fast forward**
+
+<Appear>
+
+Back office apps, internal tools, B2B.
+
+20k-300k lines of code. Teams of 5 to 20.
+
+</Appear>
 
 <Side>
+<Appear priority={1000}>
 
-<Appear>
-
-40k to 300k lines of code.<br />
-Teams of 5 to 20 developers.
+### Same question,<br/> every project:<br /> can we build **faster**?<br /> With fewer **bugs**?
 
 </Appear>
-
-<Appear>
-
-Became tech lead.
-
-</Appear>
-
-<Appear>
-
-Not because I was the smartest.
-
-But because I was the slowest to say no.
-
-</Appear>
-
-<Appear>
-
-(Which in the end, is the same thing.)
-
-</Appear>
-
-<Appear>
-
-Now Engineering Manager at Sanofi.
-
-Org of React Paris meetups
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-I started freelancing. Big companies.
-
-I often ended up as tech lead.
-
-I went deep into React — trainings, performance audits, architecture decisions. Over time, I moved into engineering management.
-
-Out: thanks people.
-
-</Notes>
-
----
-
-layout: centered
-
----
-
-{/* The Recurring Question */}
-
-## Can we build **faster**?
-
-<Appear>
-
-## Without bugs?
-
-</Appear>
-
-<Notes>
-
-Outro: This question stuck with me. It brought me back to the young me using AngularJS.
-
-</Notes>
-
----
-
-layout: centered
-
----
-
-## Did **React** actually make me faster?
-
-<Notes>
-
-The main difference that I had less cognitive load. I didn't have to think
-about DOM operations. I could just write components.
-
-But did it actually made me faster?
-
-And by so I mean: could I resolve problems faster?
-
-</Notes>
-
----
-
-layout: side
-
----
-
-### What I mean by **problems**
-
-<Side>
-
-<Appear>
-
-Build features (that works)
-
-</Appear>
-
-<Appear>
-
-No bugs
-
-</Appear>
-
-<Appear>
-
-Good UX
-
-</Appear>
-
-<Appear>
-
-Aligned with business
-
-</Appear>
-
-<Appear>
-
-**That's the job.**
-
-</Appear>
-
 </Side>
 
 ---
@@ -224,14 +158,14 @@ layout: centered
 
 ---
 
-import iconPyramid from "./icon-pyramid-testing.png";
-import iconInvertedPyramid from "./icon-inverted-pyramid.png";
-import iconTrophy from "./icon-trophy-testing.png";
-import iconDesignSystem from "./icon-design-system.png";
-import iconAccessibility from "./icon-accessibility.png";
-import iconFeatureFlags from "./icon-feature-flags.png";
-import iconHiddenFlags from "./icon-hidden-flags.png";
-import iconCoreWebVitals from "./icon-core-web-vitals.png";
+import iconPyramid from "../react-will-not-solve-your-problems/icon-pyramid-testing.png";
+import iconInvertedPyramid from "../react-will-not-solve-your-problems/icon-inverted-pyramid.png";
+import iconTrophy from "../react-will-not-solve-your-problems/icon-trophy-testing.png";
+import iconDesignSystem from "../react-will-not-solve-your-problems/icon-design-system.png";
+import iconAccessibility from "../react-will-not-solve-your-problems/icon-accessibility.png";
+import iconFeatureFlags from "../react-will-not-solve-your-problems/icon-feature-flags.png";
+import iconHiddenFlags from "../react-will-not-solve-your-problems/icon-hidden-flags.png";
+import iconCoreWebVitals from "../react-will-not-solve-your-problems/icon-core-web-vitals.png";
 
 import { Card } from "./card.tsx";
 
@@ -258,46 +192,16 @@ import { Card } from "./card.tsx";
   <Card
     icon={iconHiddenFlags}
     title="Hidden Features"
-    subtitle="The ones that are never rolled out to users"
+    subtitle="The ones that are never rolled out"
   />
   <Card
     icon={iconCoreWebVitals}
-    title="Core Web Vitals"
-    subtitle="Monitoring, observability..."
+    title="Monitoring"
+    subtitle="Core Web Vitals, observability..."
   />
 </div>
 
 ### I did everything **by the book**
-
-<Notes>
-
-And you should do all of this.
-
-</Notes>
-
----
-
-layout: centered
-
----
-
-### We are **doing more**<br />We are **faster**<br /> ...and the **problems are still there**
-
-<Notes>
-
-So today, I want to step back. And go one level deeper.
-
-Or just going back to basics
-
-</Notes>
-
----
-
-layout: centered
-
----
-
-### What problem does **React solve**?
 
 ---
 
@@ -305,20 +209,200 @@ layout: sidedCode
 
 ---
 
-### **The DOM problem**
+### Here's what "faster" looked like
 
-```ts
-// ❌ Checking visibility triggers style recalc
-const isVisible = el.style.display !== "none";
+```tsx
+function ContactForm() {
+  const schema = z.object({
+    email: z.string().email(),
+    message: z.string().min(1),
+  });
 
-// ❌ Reading layout triggers reflow
-const width = el.offsetWidth;
-el.style.width = width + 10 + "px";
+  const { register, handleSubmit, formState } = useForm({
+    resolver: zodResolver(schema),
+  });
 
-// ❌ Loop = layout thrashing
-items.forEach((item) => {
-  const h = item.offsetHeight; // read → reflow
-  item.style.height = h + 5 + "px"; // write → reflow
+  const mutation = useMutation({
+    mutationFn: submitContact,
+    onSuccess: () => setSuccess(true),
+  });
+
+  // + useEffect, useState, error handling, toast...
+
+  return (
+    <form onSubmit={handleSubmit((d) => mutation.mutate(d))}>
+      <input {...register("email")} />
+      <textarea {...register("message")} />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+<Appear>
+
+### React-Hook-Form, Zod, React Query, 3 custom hooks.
+
+</Appear>
+
+<Appear>
+
+### For a form with **2 fields**.
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **The Cognitive Cost**
+
+<Side>
+
+<Appear>
+
+In cognitive science, we talk about three types of load:
+
+</Appear>
+
+<Appear>
+
+**Intrinsic load** — the actual problem you're solving
+
+</Appear>
+
+<Appear>
+
+**Extraneous load** — everything _you_ added on top
+
+</Appear>
+
+<Appear>
+
+**Germane load** — the effort that builds real understanding
+
+</Appear>
+
+</Side>
+
+<Notes>
+
+Cognitive science.
+
+Brain has finite capacity. Like a glass.
+
+</Notes>
+
+---
+
+layout: fullImage
+backgroundColor: "white"
+padding: 10rem 8rem
+
+---
+
+## &nbsp;
+
+import intrinsicLoad from "../react-will-not-solve-your-problems/intrinsic-load.png";
+
+<Image
+  src={intrinsicLoad}
+  alt="Intrinsic load vs Extraneous load"
+  style={{ objectFit: "cover", maxHeight: "80vh", maxWidth: "80vw" }}
+/>
+
+## &nbsp;
+
+<Notes>
+
+Redux wasn't bad. It just wasn't designed for this. We used it because we had nothing else.
+TanStack Query absorbed the extraneous load into a simple interface.
+
+</Notes>
+
+---
+
+layout: twoColumn
+
+---
+
+import vennDiagram from "./venn-diagram.svg";
+
+<Image
+  src={vennDiagram}
+  alt="Venn diagram: problems React solves vs problems you have"
+  style={{ objectFit: "contain", maxHeight: "80vh", maxWidth: "35vw" }}
+/>
+
+import { Column } from "@gpichot/spectacle-deck";
+
+<Column>
+
+<Appear>
+
+### The **Alignment Problem**
+
+When the tool solves a different problem than yours, you don't just fail.
+
+You create **new** complexity.
+
+</Appear>
+
+</Column>
+
+---
+
+layout: centered
+
+---
+
+### AI lets you generate code **faster than ever**.
+
+<Appear>
+
+### But faster in the **wrong direction** is still wrong.
+
+</Appear>
+
+<Appear>
+
+### The bottleneck was never typing. It's **understanding**.
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Testing that same form**
+
+```tsx
+it("submits the contact form", async () => {
+  render(<ContactForm />);
+
+  await userEvent.type(
+    screen.getByRole("textbox", { name: "Email" }),
+    "alice@example.com",
+  );
+  await userEvent.type(
+    screen.getByRole("textbox", { name: "Message" }),
+    "Hello!",
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+  expect(screen.getByText("Thank you!")).toBeInTheDocument();
+});
+
+it("shows validation error on empty email", async () => {
+  render(<ContactForm />);
+
+  await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+  expect(screen.getByText("Email is required")).toBeInTheDocument();
 });
 ```
 
@@ -326,194 +410,19 @@ items.forEach((item) => {
 
 <Appear>
 
-Every **read** after a **write** forces the browser to recalculate layout
+`"Email"`, `"Message"`, `"Send"` — **hardcoded** in every test
 
 </Appear>
 
 <Appear>
 
-In a loop? **Layout thrashing**.
+Rename "Send" to "Submit"? **Every test breaks.**
 
 </Appear>
 
 <Appear>
 
-Multiple components updating? **Repaint storms, UI freezes**
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-Nearly every reading or writing DOM/CSS operation triggers layout recomputing. Things get slow very fast. It's fine for one element, but when multiple parts of the UI update at once, it compounds.
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **What React Did**
-
-<Appear priority={1000}>
-
-We stopped thinking in DOM operations
-
-</Appear>
-
-<Side>
-
-<Appear>
-
-UI = function of state
-
-</Appear>
-
-<Appear>
-
-Batching updates
-
-</Appear>
-
-<Appear>
-
-Diffing
-
-</Appear>
-
-<Appear>
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-AngularJS and React both solved this. React's mental model — components — was the real win. And JSX is just plain JS, which is why it feels so simple.
-
-</Notes>
-
----
-
-layout: centered
-
----
-
-### It solves: **rendering performance**, **UI consistency**
-
-<Appear>
-
-### It does NOT solve: **product decisions**, **architecture**, **team alignment**
-
-</Appear>
-
----
-
-layout: centered
-
----
-
-### And yet...
-
-We are faster than ever.
-
-...and still slow.
-
-### So the problem is not rendering.
-
----
-
-layout: sidedImage
-position: right
-
----
-
-import vennDiagram from "./venn-x-solves.svg";
-
-<Image
-  src={vennDiagram}
-  alt="Venn diagram: problems React solves vs problems you have"
-  style={{ objectFit: "contain" }}
-/>
-
-### The mismatch: when they don't overlap...
-
-You don't just fail to solve your problem.
-
-You create new ones.
-
-<Appear>
-
-### That's why complexity grows.
-
-</Appear>
-
----
-
-layout: centered
-
----
-
-### This Is Not About React
-
-<Appear>
-
-### It's true for NextJS, Remix, <strike>TanStack</strike>, any library.
-
-</Appear>
-
-<Appear>
-
-### The problem is not the tool. It's choosing the tool before understanding the problem.
-
-</Appear>
-
-<Notes>
-
-We choose tools because of hype, ecosystem, hiring. Not because they solve our problem.
-
-</Notes>
-
----
-
-layout: side
-
----
-
-### So why do we keep doing this?
-
-<Appear>
-
-Because we don't see the system.
-
-</Appear>
-
-<Side>
-
-<Appear>
-
-So we guess.
-
-</Appear>
-
-<Appear>
-
-- We choose tools
-
-</Appear>
-
-<Appear>
-
-- We add abstractions
-
-</Appear>
-
-<Appear>
-
-- We follow patterns
+Code becomes **frozen**. Nobody dares touch the UI.
 
 </Appear>
 
@@ -521,29 +430,49 @@ So we guess.
 
 ---
 
-layout: side
+layout: sidedCode
 
 ---
 
-### Well...
+### **Testing: absorb the complexity**
+
+```tsx
+it("submits the contact form", async () => {
+  const { form, actions } = renderContactForm();
+
+  await actions.fillEmail("alice@example.com");
+  await actions.fillMessage("Hello!");
+  await actions.submit();
+
+  expect(form.successMessage()).toBeVisible();
+});
+
+it("shows validation error on empty email", async () => {
+  const { form, actions } = renderContactForm();
+
+  await actions.submit();
+
+  expect(form.emailError()).toBeVisible();
+});
+```
 
 <Side>
 
 <Appear>
 
-**Why** — why are we building this
+Selectors defined **once**, in `renderContactForm`.
 
 </Appear>
 
 <Appear>
 
-**What** — what are we building
+Rename "Send" to "Submit"? **One place** to change.
 
 </Appear>
 
 <Appear>
 
-**How** — how we build it
+Tests describe **intent**, not DOM structure.
 
 </Appear>
 
@@ -552,179 +481,79 @@ layout: side
 ---
 
 layout: centered
-position: right
 
 ---
 
+### &nbsp;
+
 <Appear>
 
-<Text>What we should do:</Text>
-
-<Text fontSize={60} fontWeight="bold">
-  Why → What → How
-</Text>
+A colleague came to me. "We have cycles between features. Coupling everywhere."
 
 </Appear>
 
 <Appear>
 
-<Text textAlign="center">What we do:</Text>
-
-<Text fontSize={60} fontWeight="bold">
-  How → What → Why... did we do that?
-</Text>
-
-</Appear>
-
----
-
-layout: centered
-
----
-
-### **Hype-Driven Development**
-
-<Appear>
-
-We pick the framework because it's popular
+I asked: **how did you find out?**
 
 </Appear>
 
 <Appear>
 
-Then figure out what we're building
+"Claude told me."
 
 </Appear>
 
-<Notes>
+---
 
-Most of the complexity we fight, we introduced ourselves.
-
-</Notes>
+layout: sidedCode
 
 ---
 
-layout: side
+### **domainlint**: make the invisible visible
 
----
+```typescript
+export const mustUseBarrelFileRule: Rule = {
+  name: "must-use-barrel-file",
+  check({ graph, config, emitViolation }) {
+    for (const edge of graph.edges) {
+      // ...
+      if (!isBarrelFile(edge.toPath)) {
+        const expectedBarrelPath = getBarrelPath(edge.toPath);
 
-### **Cognitive Load Theory**
+        emitViolation({
+          code: "mustUseBarrelFile",
+          message: `Import from feature barrel "${expectedBarrelPath}" instead.`,
+        });
+      }
+    }
+  },
+};
+```
 
 <Side>
 
 <Appear>
 
-**Intrinsic load** — the real problem
+Global rules: **cycles** and **cross-feature imports**
 
 </Appear>
 
 <Appear>
 
-**Extraneous load** — everything we added
+Per-feature overrides for **legacy code**
 
 </Appear>
 
 <Appear>
 
-**Germane load** — the effort that builds understanding
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-From cognitive science. The goal is to minimize extraneous load so you can maximize germane load.
-
-</Notes>
-
----
-
-layout: fullImage
-
----
-
-## &nbsp;
-
-import intrinsicLoad from "./intrinsic-load.png";
-
-<Image
-  src={intrinsicLoad}
-  alt="Intrinsic load vs Extraneous load (TanStack vs Redux)"
-  style={{ objectFit: "cover" }}
-  maxWidth="80vw"
-  maxHeight="80vh"
-/>
-
-## &nbsp;
-
----
-
-layout: centered
-
----
-
-### Most of our complexity is **extraneous**
-
-<Appear>
-
-### And we created it ourselves.
+`npx domainlint check` in CI
 
 </Appear>
 
 <Appear>
 
-### Frameworks, patterns, architecture debates
-
-</Appear>
-
----
-
-layout: centered
-
----
-
-### We spend more time managing complexity than solving problems
-
----
-
-layout: centered
-
----
-
-### The problem is **the gap**<br />between the information that **we have** <br />and the information that **we need**
-
-<Notes>
-
-I had a discussion with a colleague, he told me "the issue that we have on the
-frontend is that we use feature based architecture, but we don't respect
-boundaries, we have a lot of coupling and we have cycling between features."
-
-- How did you see that?
-
-- I asked Claude
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **domainlint**
-
-<Side>
-
-<Appear>
-
-It's not really a lint tool.
-
-</Appear>
-
-<Appear>
-
-### It's a way to surface information that is already there... but not visible.
+Not a solution. A diagnostic. Like an **X-ray**.
 
 </Appear>
 
@@ -735,373 +564,41 @@ It's not really a lint tool.
   link="https://domainlint.netlify.app/"
 />
 
-<Notes>
-
-After seeing the same problems in project after project.
-
-I built a tool called domainlint.
-
-</Notes>
-
 ---
 
 layout: side
 
 ---
 
-## **Your codebase is a system**
+## **Tomorrow morning**
 
 <Side>
 
 <Appear>
 
-Dependencies
+Open your terminal.
 
 </Appear>
 
 <Appear>
 
-Flows
+Run `npx domainlint check` on your project.
 
 </Appear>
 
 <Appear>
 
-Boundaries
+Look at the violations.
 
 </Appear>
 
 <Appear>
 
-domainlint turns that into a graph.
+If it scares you — **good**. Now you can see.
 
 </Appear>
 
 </Side>
-
-<Notes>
-
-Your codebase is not just files. It's a system.
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **It makes the implicit explicit**
-
-<Side>
-
-<Appear>
-
-Hidden coupling
-
-</Appear>
-
-<Appear>
-
-Circular dependencies
-
-</Appear>
-
-<Appear>
-
-Broken boundaries
-
-</Appear>
-
-<Appear>
-
-They already exist. You just don't see them.
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-"Most architecture problems are not created. They are revealed too late."
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **What changes**
-
-<Side>
-
-<Appear>
-
-Decisions get easier
-
-</Appear>
-
-<Appear>
-
-Refactoring becomes safer
-
-</Appear>
-
-<Appear>
-
-Discussions become factual
-
-</Appear>
-
-<Appear>
-
-You stop arguing opinions. You start looking at the system.
-
-</Appear>
-
-</Side>
-
----
-
-layout: centered
-
----
-
-### Building software is not about code. It's about information.
-
-<Appear>
-
-Code is just a projection.
-
-</Appear>
-
-<Appear>
-
-The real thing is: what depends on what, what impacts what, how things flow.
-
-</Appear>
-
----
-
-layout: side
-
----
-
-## **The real shift**
-
-<Side>
-
-<Appear>
-
-Everyone talks about generating code.
-
-</Appear>
-
-<Appear>
-
-But that's not the real shift.
-
-</Appear>
-
-<Appear>
-
-The real shift is that we can now operate on information.
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-AI is not a code generator. It's an information processor.
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **The constraint**
-
-AI is only as good as the information you give it.
-
-<Side>
-
-<Appear>
-
-Without structure: hallucination, local reasoning, inconsistency
-
-</Appear>
-
-<Appear>
-
-With structure: context, alignment, leverage
-
-</Appear>
-
-</Side>
-
-<Notes>
-
-If you don't know what you're building, AI will happily build the wrong thing.
-
-</Notes>
-
----
-
-layout: side
-
----
-
-## **The connection**
-
-<Side>
-
-<Appear>
-
-Tools like domainlint: **structure information, expose relationships, make systems legible**
-
-</Appear>
-
-<Appear>
-
-AI can then: **navigate, reason, transform**
-
-</Appear>
-
-<Appear>
-
-AI doesn't understand your code. It understands the representation of your system.
-
-</Appear>
-
-</Side>
-
----
-
-layout: side
-
----
-
-## **What becomes easier**
-
-<Side>
-
-<Appear>
-
-Large-scale refactoring
-
-</Appear>
-
-<Appear>
-
-Onboarding
-
-</Appear>
-
-<Appear>
-
-Enforcing architecture
-
-</Appear>
-
-<Appear>
-
-Scaling systems
-
-</Appear>
-
-<Appear>
-
-Not because AI is smarter. **Because the system is more visible.**
-
-</Appear>
-
-</Side>
-
----
-
-layout: side
-
----
-
-### You can surface information. You still need to interpret it.
-
-<Side>
-
-<Appear>
-
-Defining boundaries
-
-</Appear>
-
-<Appear>
-
-Choosing tradeoffs
-
-</Appear>
-
-<Appear>
-
-Deciding what matters
-
-</Appear>
-
-<Appear>
-
-**That's still our job.**
-
-</Appear>
-
-</Side>
-
----
-
-layout: side
-
----
-
-## **So now we have**
-
-<Side>
-
-<Appear>
-
-Better tools
-
-</Appear>
-
-<Appear>
-
-More information
-
-</Appear>
-
-<Appear>
-
-Faster execution
-
-</Appear>
-
-<Appear>
-
-But the bottleneck didn't disappear.
-
-</Appear>
-
-</Side>
-
----
-
-layout: centered
-
----
-
-### The bottleneck is still decision-making
 
 ---
 
@@ -1119,31 +616,12 @@ transition: fade
 
 ---
 
-### **AI** won't solve your problems.
+### **No tool** will solve your problems.
 
----
+<Appear>
 
-layout: centered
-transition: fade
+### **Align** the tool to the problem
 
----
+### And **Reduce** the cognitive cost
 
-### They just give you more leverage on the same system.
-
----
-
-layout: centered
-transition: fade
-
----
-
-### We can go faster. But only if we understand what we are building.
-
----
-
-layout: centered
-transition: fade
-
----
-
-### Let's go faster, but in the right direction.
+</Appear>

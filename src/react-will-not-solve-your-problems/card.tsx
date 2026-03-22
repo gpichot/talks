@@ -1,4 +1,4 @@
-import { Appear, Text } from "@gpichot/spectacle-deck";
+import { Appear } from "@gpichot/spectacle-deck";
 export const Card = ({ icon, title, subtitle }) => (
 	<Appear>
 		<div
@@ -13,6 +13,7 @@ export const Card = ({ icon, title, subtitle }) => (
 				maxWidth: "200px",
 				height: "100%",
 				boxSizing: "border-box",
+				textAlign: "center",
 			}}
 		>
 			<img
@@ -25,19 +26,15 @@ export const Card = ({ icon, title, subtitle }) => (
 					marginBottom: "12px",
 				}}
 			/>
-			<Text
-				fontSize="1.2em"
-				fontWeight="bold"
-				margin={0}
-				padding={0}
-				style={{ padding: 0 }}
+			<p
+				style={{ fontSize: "0.8em", fontWeight: "500", margin: 0, padding: 0 }}
 			>
 				{title}
-			</Text>
+			</p>
 			{subtitle && (
-				<Text fontSize="1em" margin={0} padding={0} opacity={0.7}>
+				<p style={{ fontSize: "0.7em", margin: 0, padding: 0, opacity: 0.7 }}>
 					{subtitle}
-				</Text>
+				</p>
 			)}
 		</div>
 	</Appear>

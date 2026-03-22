@@ -13,12 +13,11 @@
 	"license": "ISC",
 	"dependencies": {
 		"@google/genai": "^1.34.0",
-		"@gpichot/spectacle-deck": "1.5.0",
-		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
-		"spectacle": "^10.2.3",
+		"@gpichot/spectacle-deck": "1.17.0",
+		"react": "19.3.0-canary-9627b5a1-20260327",
+		"react-dom": "19.3.0-canary-9627b5a1-20260327",
 		"styled-components": "^6.3.12",
-		"vite-plugin-react-deck": "1.5.1"
+		"vite-plugin-react-deck": "1.14.0"
 	},
 	"devDependencies": {
 		"@mdx-js/react": "^3.1.1",
@@ -31,6 +30,6 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.6",
 		"typescript": "^5.2.2",
-		"vite": "^8.0.1"
+		"vite": "^8.0.2"
 	}
 }
