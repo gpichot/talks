@@ -14,8 +14,8 @@ importers:
         specifier: ^1.47.0
         version: 1.47.0
       '@gpichot/spectacle-deck':
-        specifier: 1.18.0
-        version: 1.18.0(@types/react@19.2.14)
+        specifier: 1.18.1
+        version: 1.18.1(@types/react@19.2.14)
       react:
         specifier: 19.3.0-canary-9627b5a1-20260327
         version: 19.3.0-canary-9627b5a1-20260327
@@ -32,8 +32,8 @@ importers:
         specifier: ^6.3.12
         version: 6.3.12(react-dom@19.3.0-canary-9627b5a1-20260327)
       vite-plugin-react-deck:
-        specifier: 1.15.0
-        version: 1.15.0(@types/react@19.2.14)
+        specifier: 1.15.1
+        version: 1.15.1(@types/react@19.2.14)
     devDependencies:
       '@mdx-js/react':
         specifier: ^3.1.1
@@ -160,8 +160,8 @@ packages:
       '@modelcontextprotocol/sdk':
         optional: true
 
-  '@gpichot/spectacle-deck@1.18.0':
-    resolution: {integrity: sha512-6M3n0Pxzv7IRjs0H0OhiY5gadZiJkVU5X4nNjWzGVJ1KyzAJjzf8XsgXtHwRv8voDA6MFI/8a4CF6ubNqI//Cw==}
+  '@gpichot/spectacle-deck@1.18.1':
+    resolution: {integrity: sha512-KYvnXm4vI5ugHj4tZH5n50wl8Sn460Z0Tya0MJzFl/z17AUOamHUIBC9BV3SRWkdgRCV+X2KnA4UB2/Tp6eKLA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2139,8 +2139,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite-plugin-react-deck@1.15.0:
-    resolution: {integrity: sha512-0rBbfG9eh5paxORFKTUtDvoBBwdMCprxJda3z3ocFs8kvW/zv/yqa/XqGvq3cf72RAiK0fZvsMbXxPZXVfjI0Q==}
+  vite-plugin-react-deck@1.15.1:
+    resolution: {integrity: sha512-B4Dqwu0uOVXBjWa2rhlO0pIsD4DP+LwnOa6GWMn0RsigzwzCH4nACSIuLnfNSIr7XV2pJthAveJG/LJ8aEhvuQ==}
 
   vite@8.0.3:
     resolution: {integrity: sha512-B9ifbFudT1TFhfltfaIPgjo9Z3mDynBTJSUYxTjOQruf/zHH+ezCQKcoqO+h7a9Pw9Nm/OtlXAiGT1axBgwqrQ==}
@@ -2350,7 +2350,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@gpichot/spectacle-deck@1.18.0(@types/react@19.2.14)':
+  '@gpichot/spectacle-deck@1.18.1(@types/react@19.2.14)':
     dependencies:
       '@fontsource/bitter': 5.2.10
       '@mdx-js/react': 3.1.1(@types/react@19.2.14)
@@ -4847,7 +4847,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-plugin-react-deck@1.15.0(@types/react@19.2.14):
+  vite-plugin-react-deck@1.15.1(@types/react@19.2.14):
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@mdx-js/react': 3.1.1(@types/react@19.2.14)

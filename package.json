@@ -13,13 +13,13 @@
 	"license": "ISC",
 	"dependencies": {
 		"@google/genai": "^1.47.0",
-		"@gpichot/spectacle-deck": "1.18.0",
+		"@gpichot/spectacle-deck": "1.18.1",
 		"react": "19.3.0-canary-9627b5a1-20260327",
 		"react-dom": "19.3.0-canary-9627b5a1-20260327",
 		"rehype-katex": "^7.0.1",
 		"remark-math": "^6.0.0",
 		"styled-components": "^6.3.12",
-		"vite-plugin-react-deck": "1.15.0"
+		"vite-plugin-react-deck": "1.15.1"
 	},
 	"devDependencies": {
 		"@mdx-js/react": "^3.1.1",
