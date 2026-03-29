@@ -1,0 +1,627 @@
+---
+author: Gabriel Pichot
+title: "React Won't Solve Your Problems"
+summary: >
+  React made building UIs simpler, but the problems we face today aren't about rendering.
+  Through practical examples — testing utilities, domainlint, TanStack Query — this talk
+  explores how reducing extraneous cognitive load is the real lever for building software that lasts.
+tags: ["react", "architecture", "cognitive-load", "domainlint", "testing", "dx"]
+outline: >
+  - Hook: domainlint demo on a real project
+  - Personal story (confession, not lecture)
+  - ContactForm: the over-engineered form
+  - "I did everything by the book"
+  - Cognitive load: why we over-engineer (discovery, not lesson)
+  - Redux → TanStack Query (let the code speak)
+  - Testing utilities
+  - "I asked Claude" (the turning point)
+  - domainlint
+  - Takeaways + concrete action
+---
+
+layout: centered
+
+---
+
+import { Appear } from "@gpichot/spectacle-deck";
+import { Image, Side, ItemsColumn, Notes, Doc } from "@gpichot/spectacle-deck";
+import { FilePane } from "@gpichot/spectacle-deck";
+
+<Appear>
+
+<FilePane name="Feature based directories" minWidth="60vw">
+
+```
+src/
+  features/
+    authentication/
+      index.ts        # Public API (barrel file)
+      login.ts        # Internal
+      session.ts
+    user-profile/
+      index.ts        # Public API
+      avatar.ts
+    dashboard/
+    payments/
+```
+
+</FilePane>
+
+</Appear>
+
+<Notes>
+
+> Who's using feature-based folder structures?
+
+[Demo: run `domainlint check` on a real project]
+
+</Notes>
+
+---
+
+layout: sidedImage
+position: left
+
+---
+
+import me from "../rca-and-asynclocalstorage/assets/gabriel.jpg";
+
+<Image src={me} alt="Gabriel" style={{ objectFit: "cover" }} />
+
+**Gabriel Pichot**
+
+<Appear>
+
+Engineering Manager @Sanofi
+
+</Appear>
+
+<Appear>
+
+Organizer of React Paris Meetups
+
+</Appear>
+
+<Appear>
+
+TypeScript, React, Node.js, Python, Infra
+
+</Appear>
+
+---
+
+layout: centered
+
+---
+
+### **React won't solve your problems**
+
+<Notes>
+
+That's what I would tell myself 10 years ago.
+
+</Notes>
+
+---
+
+layout: side
+
+---
+
+import happyKid from "../react-will-not-solve-your-problems/happy-kid.png";
+
+## **10 years ago**
+
+<Appear priority={1}>
+
+No templates. No controllers. Just JavaScript.
+
+I was blown away. It felt **simple**.
+
+</Appear>
+
+<Side>
+
+<Appear priority={0}>
+  <Image src={happyKid} alt="Happy kid meme" style={{ objectFit: "contain" }} />
+</Appear>
+
+</Side>
+
+---
+
+layout: side
+
+---
+
+## **Fast forward**
+
+<Appear>
+
+Back office apps, internal tools, B2B.
+
+20k-300k lines of code. Teams of 5 to 20.
+
+</Appear>
+
+<Side>
+<Appear priority={1000}>
+
+### Same question,<br/> every project:<br /> can we build **faster**?<br /> With fewer **bugs**?
+
+</Appear>
+</Side>
+
+---
+
+layout: centered
+
+---
+
+import iconPyramid from "../react-will-not-solve-your-problems/icon-pyramid-testing.png";
+import iconInvertedPyramid from "../react-will-not-solve-your-problems/icon-inverted-pyramid.png";
+import iconTrophy from "../react-will-not-solve-your-problems/icon-trophy-testing.png";
+import iconDesignSystem from "../react-will-not-solve-your-problems/icon-design-system.png";
+import iconAccessibility from "../react-will-not-solve-your-problems/icon-accessibility.png";
+import iconFeatureFlags from "../react-will-not-solve-your-problems/icon-feature-flags.png";
+import iconHiddenFlags from "../react-will-not-solve-your-problems/icon-hidden-flags.png";
+import iconCoreWebVitals from "../react-will-not-solve-your-problems/icon-core-web-vitals.png";
+
+import { Card } from "./card.tsx";
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gap: "20px",
+    justifyContent: "stretch",
+    alignItems: "stretch",
+    margin: "24px 0 40px",
+  }}
+>
+  <Card icon={iconDesignSystem} title="Design Systems" />
+  <Card
+    icon={iconAccessibility}
+    title="Accessibility"
+    subtitle="Keyboard, ARIA, screen readers"
+  />
+  <Card icon={iconPyramid} title="Pyramid Testing" />
+  <Card icon={iconInvertedPyramid} title="Inverted Pyramid" />
+  <Card icon={iconTrophy} title="Trophy Testing" />
+  <Card icon={iconFeatureFlags} title="Feature Flags" />
+  <Card
+    icon={iconHiddenFlags}
+    title="Hidden Features"
+    subtitle="The ones that are never rolled out"
+  />
+  <Card
+    icon={iconCoreWebVitals}
+    title="Monitoring"
+    subtitle="Core Web Vitals, observability..."
+  />
+</div>
+
+### I did everything **by the book**
+
+---
+
+layout: sidedCode
+
+---
+
+### Here's what "faster" looked like
+
+```tsx
+function ContactForm() {
+  const schema = z.object({
+    email: z.string().email(),
+    message: z.string().min(1),
+  });
+
+  const { register, handleSubmit, formState } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const mutation = useMutation({
+    mutationFn: submitContact,
+    onSuccess: () => setSuccess(true),
+  });
+
+  // + useEffect, useState, error handling, toast...
+
+  return (
+    <form onSubmit={handleSubmit((d) => mutation.mutate(d))}>
+      <input {...register("email")} />
+      <textarea {...register("message")} />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+<Appear>
+
+### React-Hook-Form, Zod, React Query, 3 custom hooks.
+
+</Appear>
+
+<Appear>
+
+### For a form with **2 fields**.
+
+</Appear>
+
+---
+
+layout: side
+
+---
+
+### **The Cognitive Cost**
+
+<Side>
+
+<Appear>
+
+In cognitive science, we talk about three types of load:
+
+</Appear>
+
+<Appear>
+
+**Intrinsic load** — the actual problem you're solving
+
+</Appear>
+
+<Appear>
+
+**Extraneous load** — everything _you_ added on top
+
+</Appear>
+
+<Appear>
+
+**Germane load** — the effort that builds real understanding
+
+</Appear>
+
+</Side>
+
+<Notes>
+
+Cognitive science.
+
+Brain has finite capacity. Like a glass.
+
+</Notes>
+
+---
+
+layout: fullImage
+backgroundColor: "white"
+padding: 10rem 8rem
+
+---
+
+## &nbsp;
+
+import intrinsicLoad from "../react-will-not-solve-your-problems/intrinsic-load.png";
+
+<Image
+  src={intrinsicLoad}
+  alt="Intrinsic load vs Extraneous load"
+  style={{ objectFit: "cover", maxHeight: "80vh", maxWidth: "80vw" }}
+/>
+
+## &nbsp;
+
+<Notes>
+
+Redux wasn't bad. It just wasn't designed for this. We used it because we had nothing else.
+TanStack Query absorbed the extraneous load into a simple interface.
+
+</Notes>
+
+---
+
+layout: twoColumn
+
+---
+
+import vennDiagram from "./venn-diagram.svg";
+
+<Image
+  src={vennDiagram}
+  alt="Venn diagram: problems React solves vs problems you have"
+  style={{ objectFit: "contain", maxHeight: "80vh", maxWidth: "35vw" }}
+/>
+
+import { Column } from "@gpichot/spectacle-deck";
+
+<Column>
+
+<Appear>
+
+### The **Alignment Problem**
+
+When the tool solves a different problem than yours, you don't just fail.
+
+You create **new** complexity.
+
+</Appear>
+
+</Column>
+
+---
+
+layout: centered
+
+---
+
+### AI lets you generate code **faster than ever**.
+
+<Appear>
+
+### But faster in the **wrong direction** is still wrong.
+
+</Appear>
+
+<Appear>
+
+### The bottleneck was never typing. It's **understanding**.
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Testing that same form**
+
+```tsx
+it("submits the contact form", async () => {
+  render(<ContactForm />);
+
+  await userEvent.type(
+    screen.getByRole("textbox", { name: "Email" }),
+    "alice@example.com",
+  );
+  await userEvent.type(
+    screen.getByRole("textbox", { name: "Message" }),
+    "Hello!",
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+  expect(screen.getByText("Thank you!")).toBeInTheDocument();
+});
+
+it("shows validation error on empty email", async () => {
+  render(<ContactForm />);
+
+  await userEvent.click(screen.getByRole("button", { name: "Send" }));
+
+  expect(screen.getByText("Email is required")).toBeInTheDocument();
+});
+```
+
+<Side>
+
+<Appear>
+
+`"Email"`, `"Message"`, `"Send"` — **hardcoded** in every test
+
+</Appear>
+
+<Appear>
+
+Rename "Send" to "Submit"? **Every test breaks.**
+
+</Appear>
+
+<Appear>
+
+Code becomes **frozen**. Nobody dares touch the UI.
+
+</Appear>
+
+</Side>
+
+---
+
+layout: sidedCode
+
+---
+
+### **Testing: absorb the complexity**
+
+```tsx
+it("submits the contact form", async () => {
+  const { form, actions } = renderContactForm();
+
+  await actions.fillEmail("alice@example.com");
+  await actions.fillMessage("Hello!");
+  await actions.submit();
+
+  expect(form.successMessage()).toBeVisible();
+});
+
+it("shows validation error on empty email", async () => {
+  const { form, actions } = renderContactForm();
+
+  await actions.submit();
+
+  expect(form.emailError()).toBeVisible();
+});
+```
+
+<Side>
+
+<Appear>
+
+Selectors defined **once**, in `renderContactForm`.
+
+</Appear>
+
+<Appear>
+
+Rename "Send" to "Submit"? **One place** to change.
+
+</Appear>
+
+<Appear>
+
+Tests describe **intent**, not DOM structure.
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+
+---
+
+### &nbsp;
+
+<Appear>
+
+A colleague came to me. "We have cycles between features. Coupling everywhere."
+
+</Appear>
+
+<Appear>
+
+I asked: **how did you find out?**
+
+</Appear>
+
+<Appear>
+
+"Claude told me."
+
+</Appear>
+
+---
+
+layout: sidedCode
+
+---
+
+### **domainlint**: make the invisible visible
+
+```typescript
+export const mustUseBarrelFileRule: Rule = {
+  name: "must-use-barrel-file",
+  check({ graph, config, emitViolation }) {
+    for (const edge of graph.edges) {
+      // ...
+      if (!isBarrelFile(edge.toPath)) {
+        const expectedBarrelPath = getBarrelPath(edge.toPath);
+
+        emitViolation({
+          code: "mustUseBarrelFile",
+          message: `Import from feature barrel "${expectedBarrelPath}" instead.`,
+        });
+      }
+    }
+  },
+};
+```
+
+<Side>
+
+<Appear>
+
+Global rules: **cycles** and **cross-feature imports**
+
+</Appear>
+
+<Appear>
+
+Per-feature overrides for **legacy code**
+
+</Appear>
+
+<Appear>
+
+`npx domainlint check` in CI
+
+</Appear>
+
+<Appear>
+
+Not a solution. A diagnostic. Like an **X-ray**.
+
+</Appear>
+
+</Side>
+
+<Doc
+  label="https://domainlint.netlify.app/"
+  link="https://domainlint.netlify.app/"
+/>
+
+---
+
+layout: side
+
+---
+
+## **Tomorrow morning**
+
+<Side>
+
+<Appear>
+
+Open your terminal.
+
+</Appear>
+
+<Appear>
+
+Run `npx domainlint check` on your project.
+
+</Appear>
+
+<Appear>
+
+Look at the violations.
+
+</Appear>
+
+<Appear>
+
+If it scares you — **good**. Now you can see.
+
+</Appear>
+
+</Side>
+
+---
+
+layout: centered
+transition: none
+
+---
+
+### **React** won't solve your problems.
+
+---
+
+layout: centered
+transition: fade
+
+---
+
+### **No tool** will solve your problems.
+
+<Appear>
+
+### **Align** the tool to the problem
+
+### And **Reduce** the cognitive cost
+
+</Appear>
